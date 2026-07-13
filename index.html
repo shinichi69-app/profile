@@ -177,6 +177,11 @@
             transition: var(--transition-tactical);
         }
 
+        /* สไตล์สำหรับโมดอลข่าวสาร (ต้องการความกว้างมากกว่าปกติ) */
+        .tactical-modal.news-size {
+            max-width: 600px;
+        }
+
         .modal-overlay.open .tactical-modal {
             transform: scale(1);
         }
@@ -332,9 +337,78 @@
             border-color: #ff5555;
             box-shadow: 0 0 15px rgba(255, 85, 85, 0.3);
         }
-        /* จะแสดงผลออกมาเฉพาะตอนเปิด Owner Mode เท่านั้น */
         body.owner-mode .btn-logout {
             display: inline-block;
+        }
+
+        /* 📰 ปุ่มเปิดดูข่าวสารสไตล์ Premium Tactical Intel */
+        .btn-news {
+            display: none; /* ซ่อนไว้ก่อนในโหมดปกติ */
+            background: transparent;
+            color: #cda250;
+            border: 1px solid rgba(205, 162, 80, 0.4);
+            padding: 6px 14px;
+            border-radius: 4px;
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: var(--transition-tactical);
+            margin-top: 12px;
+            margin-right: 8px;
+            letter-spacing: 0.05em;
+        }
+        .btn-news:hover {
+            background: #cda250;
+            color: #000000;
+            border-color: #cda250;
+            box-shadow: 0 0 15px rgba(205, 162, 80, 0.3);
+        }
+        body.owner-mode .btn-news {
+            display: inline-block;
+        }
+
+        /* 🦾 ส่วนจัดสรรข่าวภายใน Console Panel */
+        .news-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
+            margin-top: 16px;
+        }
+        @media (min-width: 480px) {
+            .news-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+
+        .news-feed-item {
+            background: #141414;
+            border: 1px solid #262626;
+            border-left: 3px solid var(--border-active);
+            padding: 16px;
+            border-radius: 4px;
+            text-decoration: none;
+            color: var(--text-pure);
+            transition: var(--transition-tactical);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .news-feed-item:hover {
+            background: #1c1813;
+            border-color: var(--border-active);
+            transform: translateX(4px);
+        }
+        .news-feed-title {
+            font-family: var(--font-sans);
+            font-size: 0.95rem;
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+        .news-feed-meta {
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
         .container {
@@ -364,6 +438,19 @@
             padding-bottom: 48px;
             border-bottom: 1px dashed var(--border-subtle);
             margin-bottom: 40px;
+        }
+
+        .hero-section::before {
+            content: "// SHINICHI_07_69 //";
+            font-family: var(--font-mono);
+            color: var(--text-ghost);
+            font-size: 0.8rem;
+            position: absolute;
+            top: 0; right: 0;
+        }
+
+        body.owner-mode .hero-section::before {
+            content: "// SHINICHI_OWNER_ACCESS_GRANTED //";
         }
 
         .avatar-wrapper {
@@ -643,6 +730,57 @@
         </div>
     </div>
 
+    <!-- 📰 🪐 หน้าต่างแสดงข้อมูลข่าวสารยุทธศาสตร์ (News Feed Modal) -->
+    <div id="news-modal" class="modal-overlay">
+        <div class="tactical-modal news-size">
+            <div class="modal-header">
+                <h3>// REAL-TIME INTEL STREAM</h3>
+                <button class="btn-close-modal" onclick="toggleNewsModal(false)">[ X ]</button>
+            </div>
+            <p style="font-size:0.8rem; color:var(--text-muted); font-family:var(--font-mono); margin-bottom: 15px;">
+                > คัดกรองและสตรีมข่าวสารผ่านระบบ Google News ประเทศไทย แบบเรียลไทม์
+            </p>
+            
+            <div class="news-grid">
+                <!-- ข่าวสารยานยนต์ไทย -->
+                <a href="https://news.google.com/search?q=ข่าวรถยนต์+ไทย&hl=th&gl=TH&ceid=TH:th" target="_blank" class="news-feed-item">
+                    <div class="news-feed-title">ข่าวสารอุตสาหกรรมยานยนต์ไทย</div>
+                    <div class="news-feed-meta">
+                        <span>AUTOMOTIVE</span>
+                        <span style="color:var(--border-active);">LAUNCH STREAM ↗</span>
+                    </div>
+                </a>
+
+                <!-- ข่าวสารรถยนต์ไฟฟ้า EV -->
+                <a href="https://news.google.com/search?q=รถยนต์ไฟฟ้า+EV+ไทย&hl=th&gl=TH&ceid=TH:th" target="_blank" class="news-feed-item">
+                    <div class="news-feed-title">เจาะลึกเทรนด์รถยนต์ไฟฟ้า EV</div>
+                    <div class="news-feed-meta">
+                        <span>EV MARKET</span>
+                        <span style="color:var(--border-active);">LAUNCH STREAM ↗</span>
+                    </div>
+                </a>
+
+                <!-- ข่าวสารเศรษฐกิจในไทย -->
+                <a href="https://news.google.com/search?q=ข่าวเศรษฐกิจ+ไทย&hl=th&gl=TH&ceid=TH:th" target="_blank" class="news-feed-item">
+                    <div class="news-feed-title">ทิศทางเศรษฐกิจไทยภาพรวม</div>
+                    <div class="news-feed-meta">
+                        <span>ECONOMY</span>
+                        <span style="color:var(--border-active);">LAUNCH STREAM ↗</span>
+                    </div>
+                </a>
+
+                <!-- ข่าวหุ้นและการตลาด -->
+                <a href="https://news.google.com/search?q=การตลาด+ธุรกิจ+ยานยนต์&hl=th&gl=TH&ceid=TH:th" target="_blank" class="news-feed-item">
+                    <div class="news-feed-title">กลยุทธ์การตลาดธุรกิจยานยนต์</div>
+                    <div class="news-feed-meta">
+                        <span>BUSINESS</span>
+                        <span style="color:var(--border-active);">LAUNCH STREAM ↗</span>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+
     <!-- MAIN VIEW CONTAINER -->
     <div class="container">
         
@@ -654,13 +792,17 @@
                 </div>
                 <h1>SHINICHI</h1>
                 <h2 id="role-tag">[ SUPPORTER ]</h2>
-                <!-- 🚨 ปุ่มออกจากระบบที่จะปรากฏขึ้นเฉพาะตอนล็อกอินแล้ว -->
-                <button class="btn-logout" onclick="handleLogout()">[ DEACTIVATE OWNER MODE ]</button>
+                <div>
+                    <!-- 📰 ปุ่มเปิดดูข่าวสาร (แสดงเฉพาะตอนล็อกอินเป็น Owner เท่านั้น) -->
+                    <button class="btn-news" onclick="toggleNewsModal(true)">[ LAUNCH NEWS FEED ]</button>
+                    <!-- 🚨 ปุ่มออกจากระบบ -->
+                    <button class="btn-logout" onclick="handleLogout()">[ DEACTIVATE OWNER MODE ]</button>
+                </div>
             </header>
 
             <main class="card">
                 <h3 class="card-title">Wellcome to อะไรก็ไม่รู้เว็บไซต์</h3>
-                <p>เว็บไซต์นี้จัดทำขึ้นเพื่อเป็นประโยชน์ต่อเจ้าของเว็บไซต์เท่านั้น สวัสดีครับ</p>
+                <p>เว็บไซต์นี้จัดทำขึ้นเพื่อประโยชน์ต่อบุคคลที่ผ่านมา และกำลังมองหาสิ่งที่ขาดหาย โดยเว็บไซต์นี้ก็ไม่คิดว่าจะมีเหมือนกัน แฮร่</p>
                 <button class="btn-primary" onclick="switchView('view-works')">VIEW</button>
             </main>
         </div>
@@ -706,10 +848,10 @@
 
     <!-- --- ⚙️ Pure Logic (JavaScript) --- -->
     <script>
-        // 🔑 1. ระบบดึงรหัสผ่านปัจจุบันจากหน่วยความจำเบราว์เซอร์ (ถ้าเปิดเว็บครั้งแรกจะใช้ 'pop11013' เป็นค่าเริ่มต้นค่ะ)
+        // 🔑 ระบบดึงรหัสผ่านปัจจุบันจากหน่วยความจำเบราว์เซอร์
         let currentOwnerPassword = localStorage.getItem('ownerPassword') || 'pop11013';
 
-        // 💾 2. ฟังก์ชันตรวจสอบสถานะล็อกอินค้างไว้ (ทำงานทันทีที่โหลดหน้าจอเสร็จเพื่อป้องกันการกลับไปหน้า Supporter)
+        // 💾 ฟังก์ชันตรวจสอบสถานะล็อกอินค้างไว้
         function checkPersistedLogin() {
             const isOwnerLoggedIn = localStorage.getItem('ownerLoggedIn');
             if (isOwnerLoggedIn === 'true') {
@@ -780,7 +922,6 @@
             setInterval(update, 1000);
         }
         
-        // ⚡ เริ่มการทำงานของนาฬิกา และ ตรวจสอบความจำล็อกอินทันทีที่เปิดเว็บ
         window.addEventListener('DOMContentLoaded', () => {
             startTacticalClock();
             checkPersistedLogin(); 
@@ -856,8 +997,9 @@
         window.addEventListener('touchend', dragEnd);
 
 
-        /* ================= 🪟 🔐 ระบบหน้าต่างล็อกอิน และสลับโหมดพรีเมี่ยม ================= */
+        /* ================= 🪟 🔐 ระบบหน้าต่างล็อกอิน และ คอนโซลข่าวสาร ================= */
         const modal = document.getElementById('login-modal');
+        const newsModal = document.getElementById('news-modal');
         const forgotPanel = document.getElementById('forgot-panel');
         const generatedCodeEl = document.getElementById('generated-code');
 
@@ -867,6 +1009,15 @@
             } else {
                 modal.classList.remove('open');
                 toggleForgotPanel(false); 
+            }
+        }
+
+        // 📰 ฟังก์ชันเปิด-ปิดหน้าต่างสตรีมข่าวสาร
+        function toggleNewsModal(show) {
+            if(show) {
+                newsModal.classList.add('open');
+            } else {
+                newsModal.classList.remove('open');
             }
         }
 
@@ -917,7 +1068,6 @@
                     return;
                 }
                 currentOwnerPassword = newPassword; 
-                // บันทึกรหัสผ่านใหม่ลงหน่วยความจำถาวรทันที
                 localStorage.setItem('ownerPassword', currentOwnerPassword);
                 alert(`[ SYSTEM UPDATE ]\nเปลี่ยนรหัสผ่านใหม่เรียบร้อยแล้วค่ะ!`);
             } else {
@@ -927,11 +1077,11 @@
                 }
             }
 
-            // 🎉 เข้าสู่ระบบสำเร็จ -> ทำการบันทึกคีย์ความจำลงบราวเซอร์ถาวร
+            // 🎉 เข้าสู่ระบบสำเร็จ
             alert(`[ ACCESS GRANTED ]\nยินดีต้อนรับกลับค่ะคุณชินอิจิ ระบบเปิดโหมดพรีเมี่ยมเจ้าของเว็บไซต์เรียบร้อยแล้วค่ะ!`);
             
-            localStorage.setItem('ownerLoggedIn', 'true'); // สั่งให้จำสถานะว่าล็อกอินแล้ว
-            localStorage.setItem('ownerPassword', currentOwnerPassword); // สั่งให้จำรหัสผ่านปัจจุบัน
+            localStorage.setItem('ownerLoggedIn', 'true'); 
+            localStorage.setItem('ownerPassword', currentOwnerPassword); 
             
             document.body.classList.add('owner-mode');
             document.getElementById('role-tag').innerText = '[ OWNER / DEVELOPER ]';
@@ -939,11 +1089,10 @@
             toggleModal(false); 
         }
 
-        // 🚨 6. ฟังก์ชันออกจากระบบ (ล้างค่าความจำทั้งหมดออก)
+        // 🚨 ฟังก์ชันออกจากระบบ
         function handleLogout() {
             if (confirm("[ SYSTEM ALERT ]\nคุณชินอิจิต้องการออกจากระบบโหมดพรีเมี่ยมใช่ไหมคะ?")) {
                 
-                // 🗑️ ลบสถานะล็อกอินออกจากบราวเซอร์ (กด F5 ถัดจากนี้จะกลับมาหน้าปกติแล้วค่ะ)
                 localStorage.removeItem('ownerLoggedIn');
                 
                 document.body.classList.remove('owner-mode');
@@ -951,6 +1100,7 @@
                 
                 document.getElementById('login-form').reset();
                 toggleForgotPanel(false);
+                toggleNewsModal(false); // บังคับปิดหน้าต่างข่าวทันทีเมื่อออกจากระบบ เพื่อความปลอดภัย
                 
                 alert("[ SYSTEM UPDATE ]\nออกจากระบบเรียบร้อยแล้วค่ะ สลับกลับสู่โหมดมินิมอลปกติ");
             }
