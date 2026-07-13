@@ -11,20 +11,38 @@
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;600&family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
 
     <style>
-        /* --- 🎨 Monochrome Tactical Variables --- */
+        /* --- 🎨 Monochrome Tactical Variables (Visitor Mode) --- */
         :root {
-            --bg-base: #0a0a0a;          /* สีดำลึกพื้นหลังหลัก */
-            --bg-surface: #121212;       /* สีเทาเข้มสำหรับพื้นผิวการ์ด/คอนโซล */
-            --bg-surface-hover: #1a1a1a; /* สีเทาสำหรับเอฟเฟกต์ Hover */
-            --border-subtle: #262626;    /* เส้นขอบบางสไตล์มินิมอล */
-            --border-active: #ffffff;    /* เส้นสีขาวบริสุทธิ์เมื่อเปิดใช้งาน */
-            --text-pure: #ffffff;        /* ข้อความสีขาว */
-            --text-muted: #737373;       /* ข้อความสีเทาหม่นสำหรับข้อมูลรอง */
-            --text-ghost: #404040;       /* ข้อความเทาเข้มมากสำหรับตกแต่ง */
+            --bg-base: #0a0a0a;          
+            --bg-surface: #121212;       
+            --bg-surface-hover: #1a1a1a; 
+            --border-subtle: #262626;    
+            --border-active: #ffffff;    
+            --text-pure: #ffffff;        
+            --text-muted: #737373;       
+            --text-ghost: #404040;       
+            --accent-premium: #ffffff;
+            --grid-color: rgba(255, 255, 255, 0.01);
+            --glow-premium: transparent;
             
             --font-sans: 'Plus Jakarta Sans', sans-serif;
             --font-mono: 'JetBrains Mono', monospace;
             --transition-tactical: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        /* --- ✨ 👑 PREMIUM THEME VARIABLES (When logged in as Owner) --- */
+        body.owner-mode {
+            --bg-base: #050505;
+            --bg-surface: rgba(26, 22, 16, 0.7); /* ผิวกระจกโทนอุ่นหรูหรา */
+            --bg-surface-hover: rgba(38, 32, 23, 0.9);
+            --border-subtle: #4a3b2c;            /* เส้นขอบทองแดงหม่น */
+            --border-active: #cda250;            /* ทองคำระดับพรีเมี่ยม */
+            --text-pure: #f5eedc;
+            --text-muted: #a69276;
+            --text-ghost: #614e3b;
+            --accent-premium: #cda250;           /* สีทองประกายเอกสิทธิ์ */
+            --grid-color: rgba(205, 162, 80, 0.02); 
+            --glow-premium: 0 0 30px rgba(205, 162, 80, 0.15); 
         }
 
         /* --- 🌐 Global Reset & Base Layout --- */
@@ -41,14 +59,14 @@
             min-height: 100vh;
             line-height: 1.6;
             overflow-x: hidden;
-            /* ลายตารางกริดจำลองระบบควบคุม */
             background-image: 
-                linear-gradient(rgba(255, 255, 255, 0.01) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(255, 255, 255, 0.01) 1px, transparent 1px);
+                linear-gradient(var(--grid-color) 1px, transparent 1px),
+                linear-gradient(90deg, var(--grid-color) 1px, transparent 1px);
             background-size: 40px 40px;
+            transition: background-color 0.8s ease, background-image 0.8s ease;
         }
 
-        /* 🕒 สไตล์สำหรับนาฬิกา Real-time มุมขวาบนของคุณชินอิจิ */
+        /* 🕒 สไตล์สำหรับนาฬิกา Real-time มุมขวาบน */
         .tactical-clock {
             position: fixed;
             top: 20px;
@@ -60,11 +78,12 @@
             font-size: 0.8rem;
             padding: 8px 16px;
             border-radius: 4px;
-            z-index: 9999;
+            z-index: 999;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.8);
             display: flex;
             align-items: center;
             gap: 8px;
+            backdrop-filter: blur(10px);
             transition: var(--transition-tactical);
         }
 
@@ -79,10 +98,249 @@
             background-color: var(--bg-surface-hover);
         }
 
+        /* 📱 🦾 ปุ่มลอยตัวสไตล์ iPhone AssistiveTouch */
+        .assistive-touch-btn {
+            position: fixed;
+            bottom: 40px;
+            right: 40px;
+            width: 56px;
+            height: 56px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            cursor: move; 
+            z-index: 9999;
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.6), inset 0 0 10px rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: border-color 0.3s, background-color 0.3s, transform 0.1s;
+            touch-action: none; 
+        }
+
+        .assistive-touch-btn::before {
+            content: "";
+            width: 28px;
+            height: 28px;
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: 50%;
+            box-shadow: inset 0 0 4px rgba(0, 0, 0, 0.3);
+            transition: var(--transition-tactical);
+        }
+
+        body.owner-mode .assistive-touch-btn {
+            background: rgba(205, 162, 80, 0.15);
+            border-color: rgba(205, 162, 80, 0.5);
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.7), 0 0 15px rgba(205, 162, 80, 0.3);
+        }
+        body.owner-mode .assistive-touch-btn::before {
+            background: var(--accent-premium);
+        }
+
+        .assistive-touch-btn:active {
+            transform: scale(0.92);
+        }
+
+        /* 🪟 🔐 Tactical Login Modal Layout */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(8px);
+            z-index: 10000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.4s ease;
+        }
+
+        .modal-overlay.open {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .tactical-modal {
+            background: #0f0f0f;
+            border: 1px solid var(--border-subtle);
+            border-radius: 6px;
+            width: 100%;
+            max-width: 420px;
+            padding: 32px;
+            position: relative;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.9);
+            transform: scale(0.95);
+            transition: var(--transition-tactical);
+        }
+
+        .modal-overlay.open .tactical-modal {
+            transform: scale(1);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+            border-bottom: 1px dashed var(--border-subtle);
+            padding-bottom: 12px;
+        }
+
+        .modal-header h3 {
+            font-family: var(--font-mono);
+            font-size: 1.1rem;
+            letter-spacing: 0.05em;
+            color: var(--accent-premium);
+        }
+
+        .btn-close-modal {
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            font-family: var(--font-mono);
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+        .btn-close-modal:hover { color: #ff4a4a; }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        .form-group label {
+            display: block;
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-bottom: 6px;
+            text-transform: uppercase;
+        }
+
+        .form-control {
+            width: 100%;
+            background: #161616;
+            border: 1px solid var(--border-subtle);
+            padding: 12px;
+            border-radius: 4px;
+            color: var(--text-pure);
+            font-family: var(--font-sans);
+            font-size: 0.95rem;
+            transition: var(--transition-tactical);
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--border-active);
+            background: #1c1c1c;
+        }
+
+        .form-control.code-font {
+            font-family: var(--font-mono);
+            letter-spacing: 0.1em;
+        }
+
+        .forgot-link-wrap {
+            text-align: right;
+            margin-top: -8px;
+            margin-bottom: 20px;
+        }
+        .btn-forgot-trigger {
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            cursor: pointer;
+            text-decoration: underline;
+        }
+        .btn-forgot-trigger:hover { color: var(--border-active); }
+
+        .forgot-panel {
+            background: #161310;
+            border: 1px dashed #614e3b;
+            padding: 16px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            display: none; 
+        }
+
+        .generated-code-box {
+            background: #000;
+            border: 1px solid var(--border-subtle);
+            padding: 10px;
+            text-align: center;
+            font-family: var(--font-mono);
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #cda250;
+            letter-spacing: 0.2em;
+            margin: 8px 0 14px 0;
+            border-radius: 4px;
+        }
+
+        .btn-submit-login {
+            width: 100%;
+            padding: 14px;
+            background: var(--text-pure);
+            color: var(--bg-base);
+            border: 1px solid var(--text-pure);
+            font-family: var(--font-mono);
+            font-weight: 600;
+            font-size: 0.9rem;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: var(--transition-tactical);
+        }
+        .btn-submit-login:hover {
+            background: transparent;
+            color: var(--text-pure);
+            border-color: var(--border-active);
+        }
+
+        body.owner-mode .btn-submit-login {
+            background: var(--accent-premium);
+            color: #000;
+            border-color: var(--accent-premium);
+        }
+        body.owner-mode .btn-submit-login:hover {
+            background: transparent;
+            color: var(--accent-premium);
+        }
+
+        /* 🚨 ปุ่มออกจากระบบสไตล์ Tactical Alert */
+        .btn-logout {
+            display: none; /* ซ่อนไว้ก่อนในโหมดปกติ */
+            background: transparent;
+            color: #ff5555;
+            border: 1px solid rgba(255, 85, 85, 0.4);
+            padding: 6px 14px;
+            border-radius: 4px;
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: var(--transition-tactical);
+            margin-top: 12px;
+            letter-spacing: 0.05em;
+        }
+        .btn-logout:hover {
+            background: #ff5555;
+            color: #ffffff;
+            border-color: #ff5555;
+            box-shadow: 0 0 15px rgba(255, 85, 85, 0.3);
+        }
+        /* จะแสดงผลออกมาเฉพาะตอนเปิด Owner Mode เท่านั้น */
+        body.owner-mode .btn-logout {
+            display: inline-block;
+        }
+
         .container {
             max-width: 750px;
             margin: 0 auto;
-            padding: 80px 24px 60px 24px; /* ปรับ padding-top ขึ้นเล็กน้อยเพื่อให้หลบนาฬิกาเวลาเปิดบนมือถือ */
+            padding: 80px 24px 60px 24px; 
             position: relative;
         }
 
@@ -108,6 +366,18 @@
             margin-bottom: 40px;
         }
 
+        .hero-section::before {
+            content: "// SHINICHI_07_69 //";
+            font-family: var(--font-mono);
+            color: var(--text-ghost);
+            font-size: 0.8rem;
+            position: absolute;
+            top: 0; right: 0;
+        }
+
+        body.owner-mode .hero-section::before {
+            content: "// SHINICHI_OWNER_ACCESS_GRANTED //";
+        }
 
         .avatar-wrapper {
             position: relative;
@@ -123,6 +393,11 @@
             padding: 4px;
             background-color: var(--bg-surface);
             object-fit: cover;
+            transition: var(--transition-tactical);
+        }
+        body.owner-mode .hero-avatar {
+            border-color: var(--border-active);
+            box-shadow: 0 0 15px rgba(205, 162, 80, 0.3);
         }
 
         .hero-section h1 {
@@ -131,6 +406,11 @@
             letter-spacing: -0.05em;
             margin-bottom: 8px;
             text-transform: uppercase;
+            transition: color 0.5s ease;
+        }
+        body.owner-mode .hero-section h1 {
+            color: var(--accent-premium);
+            text-shadow: 0 0 20px rgba(205, 162, 80, 0.2);
         }
 
         .hero-section h2 {
@@ -148,11 +428,13 @@
             padding: 28px;
             margin-bottom: 20px;
             position: relative;
-            transition: var(--transition-tactical);
+            box-shadow: var(--glow-premium);
+            transition: var(--transition-tactical), box-shadow 0.8s ease;
+            backdrop-filter: blur(10px);
         }
 
         .card:hover {
-            border-color: #333;
+            border-color: var(--border-active);
             background-color: var(--bg-surface-hover);
         }
 
@@ -168,7 +450,7 @@
         .card-title::before {
             content: '■';
             font-size: 0.7rem;
-            color: var(--text-muted);
+            color: var(--accent-premium);
         }
 
         .card p {
@@ -197,6 +479,17 @@
         .btn-primary:hover {
             background-color: transparent;
             color: var(--text-pure);
+            border-color: var(--border-active);
+        }
+
+        body.owner-mode .btn-primary {
+            background-color: var(--accent-premium);
+            color: #000;
+            border-color: var(--accent-premium);
+        }
+        body.owner-mode .btn-primary:hover {
+            background-color: transparent;
+            color: var(--accent-premium);
         }
 
         /* --- 🎛️ View 2: Works Terminal Section --- */
@@ -232,7 +525,6 @@
             border-color: var(--border-active);
         }
 
-        /* แผงปุ่มตัวเลือกผลงาน 5 ปุ่ม */
         .tactical-grid {
             display: grid;
             grid-template-columns: repeat(1, 1fr);
@@ -242,10 +534,10 @@
 
         @media (min-width: 600px) {
             .tactical-grid {
-                grid-template-columns: repeat(2, 1fr); /* แสดงสองคอลัมน์บนจอคอม */
+                grid-template-columns: repeat(2, 1fr); 
             }
             .full-width-btn {
-                grid-column: span 2; /* ปุ่มที่ 5 ให้ขยายเต็มความกว้างเพื่อความสมดุล */
+                grid-column: span 2; 
             }
         }
 
@@ -263,6 +555,7 @@
             display: flex;
             flex-direction: column;
             gap: 4px;
+            backdrop-filter: blur(10px);
         }
 
         .btn-tactical span.num {
@@ -278,12 +571,15 @@
         .btn-tactical:hover, .btn-tactical.active {
             border-color: var(--border-active);
             background-color: var(--bg-surface-hover);
-            box-shadow: 0 0 15px rgba(255, 255, 255, 0.03);
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.02);
         }
 
-        /* กล่องแสดงเนื้อหาผลงานตามปุ่มที่เลือก */
+        body.owner-mode .btn-tactical.active {
+            box-shadow: 0 0 15px rgba(205, 162, 80, 0.15);
+        }
+
         .display-panel {
-            background-color: #0d0d0d;
+            background-color: rgba(5, 5, 5, 0.8);
             border: 1px solid var(--border-subtle);
             border-radius: 4px;
             padding: 24px;
@@ -291,6 +587,8 @@
             font-family: var(--font-mono);
             font-size: 0.9rem;
             position: relative;
+            box-shadow: var(--glow-premium);
+            transition: box-shadow 0.8s ease;
         }
 
         .display-panel::before {
@@ -303,15 +601,62 @@
 
         .panel-content {
             color: var(--text-muted);
-            white-space: pre-line; /* รองรับการขึ้นบรรทัดใหม่ตามข้อความ */
+            white-space: pre-line; 
         }
     </style>
 </head>
 <body>
 
-    <!-- 🕒 นาฬิกาแบบเรียลไทม์ที่เพิ่มเข้ามาใหม่ -->
+    <!-- 🕒 นาฬิกาแบบเรียลไทม์ -->
     <div id="sys-clock" class="tactical-clock">LOADING...</div>
 
+    <!-- 📱 🦾 ปุ่มลอยตัวสไตล์ iPhone AssistiveTouch -->
+    <div id="assistive-btn" class="assistive-touch-btn"></div>
+
+    <!-- 🪟 🔐 หน้าต่างล็อกอิน (Modal Screen) -->
+    <div id="login-modal" class="modal-overlay">
+        <div class="tactical-modal">
+            <div class="modal-header">
+                <h3 id="modal-title">// OWNER AUTHENTICATION</h3>
+                <button class="btn-close-modal" onclick="toggleModal(false)">[ X ]</button>
+            </div>
+            
+            <form id="login-form" onsubmit="handleLogin(event)">
+                <div class="form-group">
+                    <label>Email Address</label>
+                    <input type="email" id="login-email" class="form-control" required placeholder="owner@domain.com">
+                </div>
+                <div class="form-group">
+                    <label>Username</label>
+                    <input type="text" id="login-user" class="form-control" required placeholder="shinichi_admin">
+                </div>
+                
+                <!-- ช่องกรอกรหัสผ่านหลัก -->
+                <div class="form-group" id="old-pass-group">
+                    <label>Password (8 Characters)</label>
+                    <input type="password" id="login-pass" class="form-control code-font" required maxlength="8" placeholder="********">
+                </div>
+
+                <div class="forgot-link-wrap">
+                    <button type="button" class="btn-forgot-trigger" onclick="toggleForgotPanel(true)">Forgot Password?</button>
+                </div>
+
+                <!-- แผงหน้าต่างลืมรหัสผ่าน -->
+                <div id="forgot-panel" class="forgot-panel">
+                    <label style="display:block; font-family:var(--font-mono); font-size:0.7rem; color:#cda250;">[ SECURITY ALERT: CODE GENERATED ]</label>
+                    <div id="generated-code" class="generated-code-box">000000</div>
+                    <div class="form-group" style="margin-bottom: 0;">
+                        <label>Setup New 8-Digit Password</label>
+                        <input type="password" id="new-pass" class="form-control code-font" maxlength="8" placeholder="New Password">
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-submit-login">EXECUTE ACCESS</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- MAIN VIEW CONTAINER -->
     <div class="container">
         
         <!-- ================= VIEW 1: HOME PANEL ================= -->
@@ -321,13 +666,14 @@
                     <img src="my-profile.jpg" alt="Shinichi" class="hero-avatar">
                 </div>
                 <h1>SHINICHI</h1>
-                <h2>[ SUPPORTER ]</h2>
+                <h2 id="role-tag">[ SUPPORTER ]</h2>
+                <!-- 🚨 ปุ่มออกจากระบบที่จะปรากฏขึ้นเฉพาะตอนล็อกอินแล้ว -->
+                <button class="btn-logout" onclick="handleLogout()">[ DEACTIVATE OWNER MODE ]</button>
             </header>
 
             <main class="card">
                 <h3 class="card-title">Wellcome to อะไรก็ไม่รู้เว็บไซต์</h3>
                 <p>เว็บไซต์นี้จัดทำขึ้นเพื่อประโยชน์ต่อบุคคลที่ผ่านมา และกำลังมองหาสิ่งที่ขาดหาย โดยเว็บไซต์นี้ก็ไม่คิดว่าจะมีเหมือนกัน แฮร่</p>
-                <!-- ปรับเปลี่ยนฟังก์ชันคลิกเพื่อสลับหน้าจอแทนการเปิด Modal -->
                 <button class="btn-primary" onclick="switchView('view-works')">VIEW</button>
             </main>
         </div>
@@ -339,7 +685,6 @@
                 <button class="btn-back" onclick="switchView('view-home')">[ RETURN ]</button>
             </header>
 
-            <!-- แผงปุ่มตัวเลือก 5 ปุ่มสไตล์ Tactical Console -->
             <section class="tactical-grid">
                 <button class="btn-tactical active" onclick="filterWork(1, this)">
                     <span class="num">MG UBONRATCHATHANI // 01</span>
@@ -374,25 +719,33 @@
 
     <!-- --- ⚙️ Pure Logic (JavaScript) --- -->
     <script>
-        // 1. ระบบจัดการเปลี่ยนมุมมองหน้าจอแบบ SPA Smooth Transition
+        // 🔑 1. ระบบดึงรหัสผ่านปัจจุบันจากหน่วยความจำเบราว์เซอร์ (ถ้าเปิดเว็บครั้งแรกจะใช้ 'pop11013' เป็นค่าเริ่มต้นค่ะ)
+        let currentOwnerPassword = localStorage.getItem('ownerPassword') || 'pop11013';
+
+        // 💾 2. ฟังก์ชันตรวจสอบสถานะล็อกอินค้างไว้ (ทำงานทันทีที่โหลดหน้าจอเสร็จเพื่อป้องกันการกลับไปหน้า Supporter)
+        function checkPersistedLogin() {
+            const isOwnerLoggedIn = localStorage.getItem('ownerLoggedIn');
+            if (isOwnerLoggedIn === 'true') {
+                document.body.classList.add('owner-mode');
+                document.getElementById('role-tag').innerText = '[ OWNER / DEVELOPER ]';
+            }
+        }
+
+        // 3. ระบบจัดการเปลี่ยนมุมมองหน้าจอแบบ SPA Smooth Transition
         function switchView(targetViewId) {
             const currentActive = document.querySelector('.view-container:not(.hidden)');
             const targetView = document.getElementById(targetViewId);
             
             if (currentActive) {
-                // เอฟเฟกต์ Fade out หน้าจอปัจจุบัน
                 currentActive.style.opacity = '0';
                 currentActive.style.transform = 'translateY(-10px)';
                 
                 setTimeout(() => {
                     currentActive.classList.add('hidden');
-                    
-                    // เตรียมหน้าจอปลายทาง
                     targetView.classList.remove('hidden');
                     targetView.style.opacity = '0';
                     targetView.style.transform = 'translateY(10px)';
                     
-                    // เอฟเฟกต์ Fade in หน้าจอใหม่
                     setTimeout(() => {
                         targetView.style.opacity = '1';
                         targetView.style.transform = 'translateY(0)';
@@ -401,7 +754,7 @@
             }
         }
 
-        // 2. ฐานข้อมูลจำลองของผลงานทั้ง 5 หมวดหมู่ของคุณชินอิจิ
+        // 4. ฐานข้อมูลรายละเอียดงาน
         const worksData = {
             1: `> STATUS: ACTIVE\n[01]: พัฒนาทักษะการขายและข้อมูลผลิตภัณฑ์สำหรับที่ปรึกษาการขาย และแก้ปัญหาการใช้งานเบื้องต้นของฝ่ายขาย`,
             2: `> STATUS: ACTIVE\n[02]: ค้นหาเทรนด์ใหม่ๆ เพื่อวางแผนการทำกิจกรรมทั้งออนไลน์และออฟไลน์ รวมถึง การทำกราฟิกดีไซน์เพื่อผลิตสื่อให้สอดคล้องกับเป้าหมายองค์กร`,
@@ -410,16 +763,12 @@
             5: `> STATUS: ACTIVE\n[05]: พัฒนาระบบใหม่ๆ ไม่ว่าจะเป็นเว็บไซต์/เว็บแอป/AI รวมถึงรูปแบบระบบการทำงานแบบแมนนวล เพื่อเพิ่มความสะดวกต่อพนักงานและลูกค้า`
         };
 
-        // 3. ฟังก์ชันคลิกเลือกหมวดหมู่เพื่อเปลี่ยนข้อความในแผงคอนโซล
         function filterWork(index, element) {
-            // ลบสถานะความเคลื่อนไหว (Active) จากปุ่มอื่นทั้งหมด
             document.querySelectorAll('.btn-tactical').forEach(btn => btn.classList.remove('active'));
-            // เพิ่มสถานะ Active ให้กับปุ่มที่คุณชินอิจิเลือก
             element.classList.add('active');
             
-            // เปลี่ยนข้อความบนแผงควบคุมตาม ID
             const textPanel = document.getElementById('panel-text');
-            textPanel.style.opacity = '0.3'; // เฟดจางลงชั่วคราวขณะเปลี่ยนข้อความเพื่อให้ดูมีลูกเล่น
+            textPanel.style.opacity = '0.3';
             
             setTimeout(() => {
                 textPanel.innerText = worksData[index];
@@ -427,30 +776,198 @@
             }, 150);
         }
 
-        // 4. ฟังก์ชันจัดการระบบเวลาเรียลไทม์ (เพิ่มใหม่)
+        // 5. ระบบนาฬิกาเรียลไทม์
         function startTacticalClock() {
             const clockEl = document.getElementById('sys-clock');
-            
             function update() {
                 const now = new Date();
-                
-                // แยกชิ้นส่วนเวลาให้เสถียรและฟอร์แมตสวยงามเป็น DD/MM/YYYY HH:MM:SS
                 const day = String(now.getDate()).padStart(2, '0');
                 const month = String(now.getMonth() + 1).padStart(2, '0');
                 const year = now.getFullYear();
                 const hours = String(now.getHours()).padStart(2, '0');
                 const minutes = String(now.getMinutes()).padStart(2, '0');
                 const seconds = String(now.getSeconds()).padStart(2, '0');
-                
                 clockEl.innerText = `${day}/${month}/${year} ${hours}:${minutes}:${seconds}`;
             }
-            
             update();
             setInterval(update, 1000);
         }
         
-        // สั่งให้ระบบเวลาเริ่มทำงานทันทีหลังจากโหลดหน้าเว็บ
-        window.addEventListener('DOMContentLoaded', startTacticalClock);
+        // ⚡ เริ่มการทำงานของนาฬิกา และ ตรวจสอบความจำล็อกอินทันทีที่เปิดเว็บ
+        window.addEventListener('DOMContentLoaded', () => {
+            startTacticalClock();
+            checkPersistedLogin(); 
+        });
+
+
+        /* ================= 📱 🦾ระบบปุ่มลอยดึงลากได้ (iPhone AssistiveTouch Logic) ================= */
+        const btn = document.getElementById('assistive-btn');
+        let isDragging = false;
+        let hasMoved = false; 
+        let startX, startY, initialX, initialY;
+
+        function dragStart(e) {
+            isDragging = true;
+            hasMoved = false;
+            
+            const clientX = e.type === 'touchstart' ? e.touches[0].clientX : e.clientX;
+            const clientY = e.type === 'touchstart' ? e.touches[0].clientY : e.clientY;
+            
+            startX = clientX;
+            startY = clientY;
+            
+            const rect = btn.getBoundingClientRect();
+            initialX = rect.left;
+            initialY = rect.top;
+            
+            btn.style.transition = 'none'; 
+        }
+
+        function drag(e) {
+            if (!isDragging) return;
+            e.preventDefault();
+            
+            const clientX = e.type === 'touchmove' ? e.touches[0].clientX : e.clientX;
+            const clientY = e.type === 'touchmove' ? e.touches[0].clientY : e.clientY;
+            
+            const dx = clientX - startX;
+            const dy = clientY - startY;
+            
+            if (Math.abs(dx) > 5 || Math.abs(dy) > 5) {
+                hasMoved = true;
+            }
+            
+            let newX = initialX + dx;
+            let newY = initialY + dy;
+            
+            const maxW = window.innerWidth - btn.offsetWidth;
+            const maxH = window.innerHeight - btn.offsetHeight;
+            newX = Math.max(0, Math.min(newX, maxW));
+            newY = Math.max(0, Math.min(newY, maxH));
+            
+            btn.style.left = newX + 'px';
+            btn.style.top = newY + 'px';
+            btn.style.bottom = 'auto';
+            btn.style.right = 'auto';
+        }
+
+        function dragEnd(e) {
+            if (!isDragging) return;
+            isDragging = false;
+            
+            if (!hasMoved) {
+                toggleModal(true);
+            }
+        }
+
+        btn.addEventListener('mousedown', dragStart);
+        window.addEventListener('mousemove', drag);
+        window.addEventListener('mouseup', dragEnd);
+
+        btn.addEventListener('touchstart', dragStart, { passive: false });
+        window.addEventListener('touchmove', drag, { passive: false });
+        window.addEventListener('touchend', dragEnd);
+
+
+        /* ================= 🪟 🔐 ระบบหน้าต่างล็อกอิน และสลับโหมดพรีเมี่ยม ================= */
+        const modal = document.getElementById('login-modal');
+        const forgotPanel = document.getElementById('forgot-panel');
+        const generatedCodeEl = document.getElementById('generated-code');
+
+        function toggleModal(show) {
+            if(show) {
+                modal.classList.add('open');
+            } else {
+                modal.classList.remove('open');
+                toggleForgotPanel(false); 
+            }
+        }
+
+        function toggleForgotPanel(show) {
+            const oldPassGroup = document.getElementById('old-pass-group');
+            const passInput = document.getElementById('login-pass');
+            const newPassInput = document.getElementById('new-pass');
+            
+            if(show) {
+                const chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+                let randomCode = "";
+                for (let i = 0; i < 6; i++) {
+                    randomCode += chars.charAt(Math.floor(Math.random() * chars.length));
+                }
+                
+                generatedCodeEl.innerText = randomCode;
+                forgotPanel.style.display = 'block';
+                
+                newPassInput.required = true;
+                passInput.required = false; 
+                oldPassGroup.style.display = 'none'; 
+            } else {
+                forgotPanel.style.display = 'none';
+                newPassInput.required = false;
+                newPassInput.value = '';
+                passInput.required = true;
+                oldPassGroup.style.display = 'block'; 
+            }
+        }
+
+        function handleLogin(e) {
+            e.preventDefault();
+            
+            const email = document.getElementById('login-email').value;
+            const passwordInput = document.getElementById('login-pass').value;
+            const newPassword = document.getElementById('new-pass').value;
+
+            // 🔒 1. SECURITY CHECK: อีเมล
+            if (email !== 'popsteptep555@gmail.com') {
+                alert(`[ ACCESS DENIED ]\nขออภัยค่ะ อีเมลนี้ไม่มีสิทธิ์เข้าถึงระบบในฐานะเจ้าของเว็บไซต์!`);
+                return;
+            }
+
+            // 🔒 2. PASSWORD CHECK: รหัสผ่าน
+            if (forgotPanel.style.display === 'block') {
+                if (newPassword.length < 8) {
+                    alert(`[ SYSTEM ERROR ]\nกรุณาตั้งรหัสผ่านใหม่ให้ครบ 8 ตัวอักษรค่ะ!`);
+                    return;
+                }
+                currentOwnerPassword = newPassword; 
+                // บันทึกรหัสผ่านใหม่ลงหน่วยความจำถาวรทันที
+                localStorage.setItem('ownerPassword', currentOwnerPassword);
+                alert(`[ SYSTEM UPDATE ]\nเปลี่ยนรหัสผ่านใหม่เรียบร้อยแล้วค่ะ!`);
+            } else {
+                if (passwordInput !== currentOwnerPassword) {
+                    alert(`[ ACCESS DENIED ]\nรหัสผ่านไม่ถูกต้อง กรุณาลองใหม่อีกครั้งค่ะ!`);
+                    return;
+                }
+            }
+
+            // 🎉 เข้าสู่ระบบสำเร็จ -> ทำการบันทึกคีย์ความจำลงบราวเซอร์ถาวร
+            alert(`[ ACCESS GRANTED ]\nยินดีต้อนรับกลับค่ะคุณชินอิจิ ระบบเปิดโหมดพรีเมี่ยมเจ้าของเว็บไซต์เรียบร้อยแล้วค่ะ!`);
+            
+            localStorage.setItem('ownerLoggedIn', 'true'); // สั่งให้จำสถานะว่าล็อกอินแล้ว
+            localStorage.setItem('ownerPassword', currentOwnerPassword); // สั่งให้จำรหัสผ่านปัจจุบัน
+            
+            document.body.classList.add('owner-mode');
+            document.getElementById('role-tag').innerText = '[ OWNER / DEVELOPER ]';
+            
+            toggleModal(false); 
+        }
+
+        // 🚨 6. ฟังก์ชันออกจากระบบ (ล้างค่าความจำทั้งหมดออก)
+        function handleLogout() {
+            if (confirm("[ SYSTEM ALERT ]\nคุณชินอิจิต้องการออกจากระบบโหมดพรีเมี่ยมใช่ไหมคะ?")) {
+                
+                // 🗑️ ลบสถานะล็อกอินออกจากบราวเซอร์ (กด F5 ถัดจากนี้จะกลับมาหน้าปกติแล้วค่ะ)
+                localStorage.removeItem('ownerLoggedIn');
+                
+                document.body.classList.remove('owner-mode');
+                document.getElementById('role-tag').innerText = '[ SUPPORTER ]';
+                
+                document.getElementById('login-form').reset();
+                toggleForgotPanel(false);
+                
+                alert("[ SYSTEM UPDATE ]\nออกจากระบบเรียบร้อยแล้วค่ะ สลับกลับสู่โหมดมินิมอลปกติ");
+            }
+        }
     </script>
 </body>
 </html>
