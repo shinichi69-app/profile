@@ -295,12 +295,12 @@
                     <img src="my-profile.jpg" alt="Shinichi" class="hero-avatar">
                 </div>
                 <h1>SHINICHI</h1>
-                <h2>[ SOLUTION ARCHITECT / SOFTWARE ENGINEER ]</h2>
+                <h2>[ MARKETING / SUPPORTER ]</h2>
             </header>
 
             <main class="card">
-                <h3 class="card-title">Opinion</h3>
-                <p>หากอยากรู้จักกันมากขึ้น เชิญหน้าถัดไปได้เลยค้าบบบ</p>
+                <h3 class="card-title">Wellcome to อะไรก็ไม่รู้เว็บไซต์</h3>
+                <p>เว็บไซต์นี้จัดทำขึ้นเพื่อประโยชน์ต่อบุคคลที่ผ่านมา และกำลังมองหาสิ่งที่ขาดหาย โดยเว็บนี้ก็ไม่มีอะไรให้หาเช่นเดียวกันครับ</p>
                 <!-- ปรับเปลี่ยนฟังก์ชันคลิกเพื่อสลับหน้าจอแทนการเปิด Modal -->
                 <button class="btn-primary" onclick="switchView('view-works')">VIEW WORKS</button>
             </main>
@@ -309,31 +309,31 @@
         <!-- ================= VIEW 2: WORKS TERMINAL (หน้าใหม่ที่สร้างขึ้นตามโจทย์) ================= -->
         <div id="view-works" class="view-container hidden">
             <header class="works-header">
-                <h2>// MATRIX.WORKS_DEVICES</h2>
+                <h2>// Track Record</h2>
                 <button class="btn-back" onclick="switchView('view-home')">[ RETURN ]</button>
             </header>
 
             <!-- แผงปุ่มตัวเลือก 5 ปุ่มสไตล์ Tactical Console -->
             <section class="tactical-grid">
                 <button class="btn-tactical active" onclick="filterWork(1, this)">
-                    <span class="num">SYS_ARC // 01</span>
-                    <span class="label">SYSTEM ARCHITECTURE</span>
+                    <span class="num">MG UBONRATCHATHANI // 01</span>
+                    <span class="label">MG MASTER</span>
                 </button>
                 <button class="btn-tactical" onclick="filterWork(2, this)">
-                    <span class="num">MOB_INV // 02</span>
-                    <span class="label">MOBILE INVENTIONS</span>
+                    <span class="num">MG UBONRATCHATHANI // 02</span>
+                    <span class="label">MARKETING</span>
                 </button>
                 <button class="btn-tactical" onclick="filterWork(3, this)">
-                    <span class="num">WEB_ENG // 03</span>
-                    <span class="label">WEB ENGINEERING</span>
+                    <span class="num">MG UBONRATCHATHANI // 03</span>
+                    <span class="label">IT SUPPORT</span>
                 </button>
                 <button class="btn-tactical" onclick="filterWork(4, this)">
-                    <span class="num">INF_SEC // 04</span>
-                    <span class="label">INFRA & DEVSECOPS</span>
+                    <span class="num">MG UBONRATCHATHANI // 04</span>
+                    <span class="label">ADMIN / Stock</span>
                 </button>
                 <button class="btn-tactical full-width-btn" onclick="filterWork(5, this)">
-                    <span class="num">EXP_LAB // 05</span>
-                    <span class="label">EXPERIMENTAL LAB (R&D)</span>
+                    <span class="num">MG UBONRATCHATHANI // 05</span>
+                    <span class="label">Developer (R&D)</span>
                 </button>
             </section>
 
@@ -379,11 +379,11 @@
 
         // 2. ฐานข้อมูลจำลองของผลงานทั้ง 5 หมวดหมู่ของคุณชินอิจิ
         const worksData = {
-            1: `> STATUS: ACTIVE\n[ARCH-01]: ออกแบบ Microservices Ecosystem สำหรับระบบสัญญายานยนต์ขนาดใหญ่ รองรับ 10,000+ Requests/sec ด้วยเทคนิค Event-Driven (Kafka) และเกตเวย์ความปลอดภัยสูง`,
-            2: `> STATUS: ACTIVE\n[MOBILE-02]: พัฒนา Cross-platform Application ด้วย Flutter โครงสร้างแบบ Clean Architecture เชื่อมต่อระบบสแกนความปลอดภัยทางชีวภาพ (Biometrics) โหลดหน้าจอภายใน 0.18 วินาที`,
-            3: `> STATUS: STABLE\n[WEB-03]: สร้าง Full-stack Web Application ความเร็วสูงด้วย Next.js และ Node.js พร้อมการจัดการ State ขั้นสูงและการเรนเดอร์ฝั่งเซิร์ฟเวอร์ (SSR) ที่ติดอันดับ SEO ที่ดีที่สุด`,
-            4: `> STATUS: ENFORCED\n[OPS-04]: จัดการโครงสร้างพื้นฐานบน AWS ด้วยโค้ด (Infrastructure as Code - Terraform), ติดตั้งระบบรักษาความปลอดภัยอัตโนมัติ (CI/CD Automated Security Scanning) ฝังบน GitHub Actions`,
-            5: `> STATUS: TESTING\n[LAB-05]: โปรเจกต์วิจัยและพัฒนาปัญญาประดิษฐ์ (AI Agent Integration) เพื่อวิเคราะห์ข้อมูลทางตลาดเชิงพฤติกรรมและการคำนวณแบบอัตโนมัติที่แม่นยำสูง`
+            1: `> STATUS: ACTIVE\n[ARCH-01]: พัฒนาทักษะการขายและข้อมูลผลิตภัณฑ์สำหรับที่ปรึกษาการขาย และแก้ปัญหาการใช้งานเบื้องต้นของฝ่ายขาย`,
+            2: `> STATUS: ACTIVE\n[MOBILE-02]: ค้นหาเทรนด์ใหม่ๆ เพื่อวางแผนการทำกิจกรรมทั้งออนไลน์และออฟไลน์ รวมถึง การทำกราฟิกดีไซน์เพื่อผลิตสื่อให้สอดคล้องกับเป้าหมายองค์กร`,
+            3: `> STATUS: STABLE\n[WEB-03]: แก้ปัญหาระบบการทำงานด้านคอมพิวเตอร์/แอป เบื้องต้น เพื่อทำให้การทำงานของบุคลากรในองค์กรไม่ติดขัด`,
+            4: `> STATUS: ENFORCED\n[OPS-04]: อัพเดทและจัดสรรข้อมูลการขาย การตอบปัญหา รวมถึงการจัดการและบริหารสต็อกให้เป็นปัจจุบัน`,
+            5: `> STATUS: TESTING\n[LAB-05]: พัฒนาระบบใหม่ๆ ไม่ว่าจะเป็นเว็บไซต์/เว็บแอป รูปแบบระบบการทำงานแบบแมนนวล เพื่อเพิ่มความสะดวกต่อพนักงานและลูกค้า`
         };
 
         // 3. ฟังก์ชันคลิกเลือกหมวดหมู่เพื่อเปลี่ยนข้อความในแผงคอนโซล
