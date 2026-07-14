@@ -440,6 +440,10 @@
             margin-bottom: 40px;
         }
 
+        body.owner-mode .hero-section::before {
+            content: "// SHINICHI_OWNER_ACCESS_GRANTED //";
+        }
+
         .avatar-wrapper {
             position: relative;
             display: inline-block;
@@ -694,10 +698,13 @@
                 
                 <!-- ช่องกรอกรหัสผ่านหลัก -->
                 <div class="form-group" id="old-pass-group">
-                    <label>Password (88 Characters)</label>
+                    <label>Password (8 Characters)</label>
                     <input type="password" id="login-pass" class="form-control code-font" required maxlength="8" placeholder="********">
                 </div>
 
+                <div class="forgot-link-wrap">
+                    <button type="button" class="btn-forgot-trigger" onclick="toggleForgotPanel(true)">Forgot Password?</button>
+                </div>
 
                 <!-- แผงหน้าต่างลืมรหัสผ่าน -->
                 <div id="forgot-panel" class="forgot-panel">
@@ -714,63 +721,12 @@
         </div>
     </div>
 
-<!-- 📰 🪐 หน้าต่างแสดงข้อมูลข่าวสารยุทธศาสตร์ AI (AI News Feed Modal) -->
-    <div id="ai-news-modal" class="modal-overlay">
+<!-- 📰 🪐 หน้าต่างแสดงข้อมูลข่าวสารยุทธศาสตร์ (News Feed Modal) -->
+    <div id="news-modal" class="modal-overlay">
         <div class="tactical-modal news-size">
             <div class="modal-header">
-                <h3>// REAL-TIME AI INTEL STREAM</h3>
-                <button class="btn-close-modal" onclick="toggleNewsModal('ai-news-modal', false)">[ X ]</button>
-            </div>
-            <p style="font-size:0.8rem; color:var(--text-muted); font-family:var(--font-mono); margin-bottom: 15px;">
-                > คัดกรองและสตรีมข่าวสารด้านปัญญาประดิษฐ์ (AI) และเทคโนโลยีแห่งอนาคต แบบเรียลไทม์
-            </p>
-            
-            <div class="news-grid">
-                <!-- ข่าวสารเทคโนโลยีและ AI ไทย (Techsauce) -->
-                <a href="https://techsauce.co/tech-and-biz" target="_blank" class="news-feed-item">
-                    <div class="news-feed-title">เจาะลึกเทรนด์ AI และนวัตกรรมธุรกิจ</div>
-                    <div class="news-feed-meta">
-                        <span>AI & TECH BIZ</span>
-                        <span style="color:var(--border-active);">LAUNCH STREAM ↗</span>
-                    </div>
-                </a>
-
-                <!-- ข่าวสารการพัฒนาปัญญาประดิษฐ์ (Blognone) -->
-                <a href="https://www.blognone.com/topics/artificial-intelligence" target="_blank" class="news-feed-item">
-                    <div class="news-feed-title">ความเคลื่อนไหววงการนักพัฒนา AI</div>
-                    <div class="news-feed-meta">
-                        <span>AI DEVELOPMENT</span>
-                        <span style="color:var(--border-active);">LAUNCH STREAM ↗</span>
-                    </div>
-                </a>
-
-                <!-- ข่าวธุรกิจและการประยุกต์ใช้ AI (AI Business) -->
-                <a href="https://aibusiness.com/" target="_blank" class="news-feed-item">
-                    <div class="news-feed-title">กลยุทธ์และการประยุกต์ใช้ AI ในองค์กร</div>
-                    <div class="news-feed-meta">
-                        <span>ENTERPRISE AI</span>
-                        <span style="color:var(--border-active);">LAUNCH STREAM ↗</span>
-                    </div>
-                </a>
-
-                <!-- ข่าว AI ระดับโลก (The Verge AI) -->
-                <a href="https://www.theverge.com/ai-artificial-intelligence" target="_blank" class="news-feed-item">
-                    <div class="news-feed-title">อัปเดตเทคโนโลยี AI ระดับโกลบอล</div>
-                    <div class="news-feed-meta">
-                        <span>GLOBAL AI TRENDS</span>
-                        <span style="color:var(--border-active);">LAUNCH STREAM ↗</span>
-                    </div>
-                </a>
-            </div>
-        </div>
-    </div>
-
-    <!-- 🚗 🪐 หน้าต่างแสดงข้อมูลข่าวสารยุทธศาสตร์ยานยนต์ (Automotive News Feed Modal) -->
-    <div id="auto-news-modal" class="modal-overlay">
-        <div class="tactical-modal news-size">
-            <div class="modal-header">
-                <h3>// REAL-TIME AUTOMOTIVE INTEL STREAM</h3>
-                <button class="btn-close-modal" onclick="toggleNewsModal('auto-news-modal', false)">[ X ]</button>
+                <h3>// REAL-TIME INTEL STREAM</h3>
+                <button class="btn-close-modal" onclick="toggleNewsModal(false)">[ X ]</button>
             </div>
             <p style="font-size:0.8rem; color:var(--text-muted); font-family:var(--font-mono); margin-bottom: 15px;">
                 > คัดกรองและสตรีมข่าวสารจากสำนักข่าวธุรกิจและยานยนต์ชั้นนำของประเทศไทย แบบเรียลไทม์
@@ -827,11 +783,9 @@
                 </div>
                 <h1>SHINICHI</h1>
                 <h2 id="role-tag">[ SUPPORTER ]</h2>
-                <div style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
-                    <!-- 📰 ปุ่มเปิดดูข่าวสาร AI -->
-                    <button class="btn-news" onclick="toggleNewsModal('ai-news-modal', true)">[ LAUNCH AI NEWS FEED ]</button>
-                    <!-- 🚗 ปุ่มเปิดดูข่าวสารยานยนต์และเศรษฐกิจไทย -->
-                    <button class="btn-news" onclick="toggleNewsModal('auto-news-modal', true)">[ LAUNCH AUTO NEWS FEED ]</button>
+                <div>
+                    <!-- 📰 ปุ่มเปิดดูข่าวสาร (แสดงเฉพาะตอนล็อกอินเป็น Owner เท่านั้น) -->
+                    <button class="btn-news" onclick="toggleNewsModal(true)">[ LAUNCH NEWS FEED ]</button>
                     <!-- 🚨 ปุ่มออกจากระบบ -->
                     <button class="btn-logout" onclick="handleLogout()">[ DEACTIVATE OWNER MODE ]</button>
                 </div>
@@ -1050,12 +1004,7 @@
         }
 
         // 📰 ฟังก์ชันเปิด-ปิดหน้าต่างสตรีมข่าวสาร
-        function toggleNewsModal(modalId, show) {
-    const modal = document.getElementById(modalId);
-    if (modal) {
-        modal.style.display = show ? 'flex' : 'none';
-    }
-}(show) {
+        function toggleNewsModal(show) {
             if(show) {
                 newsModal.classList.add('open');
             } else {
