@@ -65,6 +65,14 @@
             background-size: 40px 40px;
             transition: background-color 0.8s ease, background-image 0.8s ease;
         }
+        <!-- คอนเทนเนอร์กรอบข้อความและปุ่มเล่นเกมส์สไตล์ Tactical โดยคิม -->
+<div class="game-tactical-container">
+    <div class="game-status-tag">SYSTEM // ONLINE</div>
+    <p class="game-description">เล่นเกมส์คลายเครียด</p>
+    <button class="game-play-btn" onclick="launchGame()">
+        LAUNCH GAME
+    </button>
+</div>
 
         /* 🕒 สไตล์สำหรับนาฬิกา Real-time มุมขวาบน */
         .tactical-clock {
@@ -142,15 +150,7 @@
         .assistive-touch-btn:active {
             transform: scale(0.92);
         }
-        <!-- คอนเทนเนอร์กรอบข้อความและปุ่มเล่นเกมส์สไตล์ Tactical โดยคิม -->
-<div class="game-tactical-container">
-    <div class="game-status-tag">SYSTEM // ONLINE</div>
-    <p class="game-description">เล่นเกมส์คลายเครียด</p>
-    <button class="game-play-btn" onclick="launchGame()">
-        LAUNCH GAME
-    </button>
-</div>
-}
+
         /* 🪟 🔐 Tactical Login Modal Layout */
         .modal-overlay {
             position: fixed;
