@@ -754,7 +754,7 @@
 </div>
 
 <!-- 🚨 เพิ่มปุ่มรีเซ็ตจำนวนผู้เข้าชมตรงนี้ค่ะ (ใช้ type="button" เพื่อไม่ให้รบกวนระบบล็อกอิน) -->
-<button type="button" class="btn-tactical-reset" onclick="resetVisitorCounter(event)">
+<button type="button" class="btn-tactical-reset" onclick="(event)">
     [ SIGNAL_RESET // COUNTER TO ZERO ]
 </button>
 
@@ -1189,25 +1189,40 @@ window.addEventListener('DOMContentLoaded', () => {
     }
     updateVisitorCounter();
 });
-// 🚨 ฟังก์ชันรีเซ็ตจำนวนผู้เข้าชม (ต้องกรอกรหัสผ่านให้ถูกต้องก่อนเท่านั้น)
+// 🔒 ฟังก์ชันตัวช่วยสำหรับแปลงรหัสผ่านปกติให้เป็น SHA-256
+async function hashSHA256(string) {
+    const utf8 = new TextEncoder().encode(string);
+    const hashBuffer = await crypto.subtle.digest('SHA-256', utf8);
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+    const hashHex = hashArray.map(bytes => bytes.toString(16).padStart(2, '0')).join('');
+    return hashHex;
+}
+
+// 🚨 ฟังก์ชันรีเซ็ตจำนวนผู้เข้าชมแบบเข้ารหัสลับสูงสุด ป้องกันการ Inspect
 async function resetVisitorCounter(event) {
-    if (event) event.preventDefault(); // ป้องกันการรีโหลดหน้าจอ
+    if (event) event.preventDefault();
     
-    // 🔒 1. ดึงค่ารหัสผ่านที่ผู้ใช้พิมพ์อยู่ในช่อง ณ ขณะนั้น
+    // 1. ดึงค่ารหัสผ่านปกติที่คุณชินอิจิพิมพ์ในช่อง ณ ขณะนั้น
     const inputPassword = document.getElementById('login-pass').value;
     
-    // 🛡️ 2. ตรวจสอบกับรหัสผ่านของ Owner (ตัวแปร currentOwnerPassword ในระบบ)
     if (inputPassword === "") {
         alert("⚠️ WARNING: โปรดกรอกรหัสผ่านของคุณชินอิจิในช่อง Password ก่อนกดรีเซ็ตระบบค่ะ");
-        return; // หยุดการทำงานทันที
+        return;
     }
     
-    if (inputPassword !== currentOwnerPassword) {
+    // 2. นำรหัสที่พิมพ์ ไปปั่นเป็น SHA-256 ทันที
+    const hashedInput = await hashSHA256(inputPassword);
+    
+    // 🔑 3. ระบบความปลอดภัยตรวจสอบรหัสลับ 64 หลัก
+    // (อย่าลืมนำรหัสรหัสลับ 64 หลักที่ได้จากช่อง Console มาวางแทนที่ข้อความข้างล่างนี้นะคะ)
+    const TARGET_HASH = "วางรหัส_SHA256_64หลักของคุณชินอิจิตรงนี้"; 
+    
+    if (hashedInput !== TARGET_HASH) {
         alert("🔴 ACCESS DENIED: รหัสผ่านไม่ถูกต้อง! ไม่ได้รับอนุญาตให้ทำการรีเซ็ตข้อมูลค่ะคุณชินอิจิ");
-        return; // รหัสไม่ตรง สั่งเด้งออกและหยุดการทำงานทันที
+        return; 
     }
     
-    // 🟢 3. ถ้ารหัสผ่านถูกต้อง จะเข้าสู่กระบวนการรีเซ็ตจริง
+    // 🟢 4. กระบวนการรีเซ็ตเมื่อรหัสผ่านถูกต้อง
     const namespace = "shinichi_portfolio";
     const key = "page_views";
     
@@ -1215,18 +1230,10 @@ async function resetVisitorCounter(event) {
     
     if (confirmReset) {
         try {
-            // ส่งคำสั่งเซ็ตค่าเป็น 0 ไปยังเซิร์ฟเวอร์กลางออนไลน์
             await fetch(`https://api.counterapi.dev/v1/${namespace}/${key}/set?value=0`);
-            
-            // ล้างค่าในระบบสำรอง LocalStorage
             localStorage.setItem('shinichi_portfolio_visits', 0);
-            
-            // อัปเดตหน้าจอทันที
             const counterElement = document.getElementById('visitor-counter');
-            if (counterElement) {
-                counterElement.innerText = "0";
-            }
-            
+            if (counterElement) counterElement.innerText = "0";
             alert("🟢 SYSTEM NOTIFICATION: รีเซ็ตระบบนับจำนวนผู้เข้าชมเป็น 0 เรียบร้อยแล้วค่ะคุณชินอิจิ");
         } catch (error) {
             console.error("Counter Reset Failed //", error);
