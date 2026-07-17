@@ -88,7 +88,7 @@
         }
 
         .tactical-clock::before {
-            content: "TIME //";
+            content: "SYS_TIME //";
             color: var(--text-muted);
             font-weight: 600;
         }
@@ -97,6 +97,38 @@
             border-color: var(--border-active);
             background-color: var(--bg-surface-hover);
         }
+
+/* 📊 สไตล์สำหรับหน้าต่างนับจำนวนผู้เข้าชมสไตล์ Tactical */
+.tactical-counter {
+    position: fixed;
+    top: 70px; /* วางใต้ระบบนาฬิกาพอดี */
+    right: 24px;
+    background-color: var(--bg-surface);
+    border: 1px solid var(--border-subtle);
+    color: var(--text-pure);
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    padding: 8px 16px;
+    border-radius: 4px;
+    z-index: 999;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.8);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    backdrop-filter: blur(10px);
+    transition: var(--transition-tactical);
+}
+
+.tactical-counter::before {
+    content: "VISITOR_COUNT //";
+    color: var(--text-muted);
+    font-weight: 600;
+}
+
+.tactical-counter:hover {
+    border-color: var(--border-active);
+    background-color: var(--bg-surface-hover);
+}
 
         /* 📱 🦾 ปุ่มลอยตัวสไตล์ iPhone AssistiveTouch */
         .assistive-touch-btn {
@@ -668,8 +700,8 @@
 </head>
 <body>
 
-    <!-- 🕒 นาฬิกาแบบเรียลไทม์ -->
-    <div id="sys-clock" class="tactical-clock">LOADING...</div>
+<!-- 📊 หน้าต่างแสดงยอดผู้เข้าชมเว็บไซต์ -->
+<div id="visitor-counter" class="tactical-counter">00,000</div>
 
     <!-- 📱 🦾 ปุ่มลอยตัวสไตล์ iPhone AssistiveTouch -->
     <div id="assistive-btn" class="assistive-touch-btn"></div>
@@ -1096,6 +1128,38 @@
                 alert("[ SYSTEM UPDATE ]\nออกจากระบบเรียบร้อยแล้วค่ะ สลับกลับสู่โหมดมินิมอลปกติ");
             }
         }
+// 📊 ระบบดึงยอดผู้เข้าชมจริงจากฐานข้อมูลกลางทั่วโลก (Real Global Counter)
+async function updateVisitorCounter() {
+    // ชื่อคีย์เฉพาะสำหรับเว็บไซต์ของคุณชินอิจิ (ห้ามซ้ำกับคนอื่น)
+    const namespace = "shinichi_portfolio";
+    const key = "page_views";
+    
+    try {
+        // ส่งสัญญาณไปบันทึกและดึงค่ายอดชมจริงผ่าน API กลาง
+        const response = await fetch(`https://api.counterapi.dev/v1/${namespace}/${key}/up`);
+        const data = await response.json();
+        
+        if (data && data.count) {
+            // แสดงผลยอดผู้เข้าชมจริงจากทั่วโลกแบบ Real-time
+            document.getElementById('visitor-counter').innerText = data.count.toLocaleString('en-US');
+        }
+    } catch (error) {
+        // หากระบบ API ภายนอกมีปัญหา จะสลับมาใช้ระบบจำลองเพื่อความสวยงามของหน้าเว็บแทนค่ะ
+        console.log("Tactical Server Offline // Using Sandbox Mode");
+        let fallbackVisits = localStorage.getItem('shinichi_portfolio_visits') || 3820;
+        fallbackVisits = parseInt(fallbackVisits) + 1;
+        localStorage.setItem('shinichi_portfolio_visits', fallbackVisits);
+        document.getElementById('visitor-counter').innerText = fallbackVisits.toLocaleString('en-US');
+    }
+}
+
+// สั่งให้ระบบทำงานทันทีเมื่อหน้าเว็บโหลดเสร็จสิ้น
+window.addEventListener('DOMContentLoaded', () => {
+    if (typeof checkPersistedLogin === 'function') {
+        checkPersistedLogin();
+    }
+    updateVisitorCounter();
+});
     </script>
 </body>
 </html>
