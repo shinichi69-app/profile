@@ -130,152 +130,6 @@
     border-color: var(--border-active);
     background-color: var(--bg-surface-hover);
 }
-        /* 📁 สไตล์ปุ่มและหน้าต่างแสดงผลงานสไตล์ Monochrome Tactical */
-.btn-works-archive {
-    margin-left: 10px;
-    border-color: var(--border-active, #666) !important;
-    background: rgba(255, 255, 255, 0.02) !important;
-}
-
-/* พื้นหลังโมดอลแบบโปร่งแสงเบลอตา */
-.tactical-modal-overlay {
-    display: none; /* ปิดไว้ตอนเริ่มต้น */
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.85);
-    backdrop-filter: blur(8px);
-    z-index: 10000;
-    justify-content: center;
-    align-items: center;
-    padding: 20px;
-}
-
-/* ตัวกล่องหน้าต่างแสดงผล */
-.tactical-modal-content {
-    background-color: #0a0a0a;
-    border: 1px solid #222;
-    width: 100%;
-    max-width: 900px;
-    max-height: 85vh;
-    display: flex;
-    flex-direction: column;
-    border-radius: 4px;
-    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.9);
-    font-family: var(--font-mono, monospace);
-    animation: tacticalZoomIn 0.25s cubic-bezier(0.1, 0.8, 0.2, 1);
-}
-
-@keyframes tacticalZoomIn {
-    from { opacity: 0; transform: scale(0.97); }
-    to { opacity: 1; transform: scale(1); }
-}
-
-.tactical-modal-header {
-    padding: 14px 20px;
-    border-bottom: 1px solid #1a1a1a;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background-color: #0f0f0f;
-}
-
-.modal-sec-title {
-    color: #666;
-    font-size: 0.75rem;
-    letter-spacing: 0.1em;
-}
-
-.modal-close-btn {
-    background: none;
-    border: none;
-    color: #ff4a4a;
-    cursor: pointer;
-    font-family: inherit;
-    font-size: 0.75rem;
-    transition: 0.2s;
-}
-
-.modal-close-btn:hover {
-    color: #ff0000;
-    text-shadow: 0 0 10px rgba(255, 0, 0, 0.4);
-}
-
-.tactical-modal-body {
-    padding: 24px;
-    overflow-y: auto;
-}
-
-/* ระบบ Grid จัดระเบียบการ์ดผลงาน */
-.works-tactical-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-    gap: 20px;
-}
-
-.work-tactical-card {
-    background-color: #111;
-    border: 1px solid #1f1f1f;
-    border-radius: 4px;
-    overflow: hidden;
-    transition: all 0.2s ease;
-}
-
-.work-tactical-card:hover {
-    border-color: #444;
-    transform: translateY(-2px);
-}
-
-.work-card-preview {
-    height: 150px;
-    background-color: #050505;
-    border-bottom: 1px solid #1f1f1f;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    color: #333;
-    font-size: 0.7rem;
-    letter-spacing: 0.1em;
-}
-
-.work-card-info {
-    padding: 16px;
-}
-
-.work-card-title {
-    color: #fff;
-    font-size: 0.85rem;
-    margin: 0 0 8px 0;
-    letter-spacing: 0.05em;
-}
-
-.work-card-desc {
-    color: #777;
-    font-size: 0.75rem;
-    line-height: 1.5;
-    margin: 0 0 16px 0;
-}
-
-/* ปุ่มกดลิงค์เปิดดูงานจริง */
-.btn-launch-project {
-    display: inline-block;
-    color: #aaa;
-    border: 1px solid #333;
-    padding: 6px 14px;
-    font-size: 0.7rem;
-    text-decoration: none;
-    border-radius: 3px;
-    transition: all 0.2s ease;
-}
-
-.btn-launch-project:hover {
-    background-color: #fff;
-    color: #000;
-    border-color: #fff;
-    box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
-}
 
         /* 📱 🦾 ปุ่มลอยตัวสไตล์ iPhone AssistiveTouch */
         .assistive-touch-btn {
@@ -982,13 +836,7 @@
         <div id="view-works" class="view-container hidden">
             <header class="works-header">
                 <h2>// Job description</h2>
-<!-- แผงควบคุมเดิมที่มีปุ่ม RETURN ของคุณชินอิจิ -->
-<button class="tactical-clock" onclick="/* โค้ดรีเทิร์นเดิม */">[ RETURN ]</button>
-
-<!-- 📁 เพิ่มปุ่มเก็บผลงานบรรทัดนี้ไว้ข้างๆ กันค่ะ -->
-<button type="button" class="tactical-clock btn-works-archive" onclick="openWorksModal()">
-    [ ARCHIVE_WORKS // 📁 ]
-</button>
+                <button class="btn-back" onclick="switchView('view-home')">[ RETURN ]</button>
             </header>
 
             <section class="tactical-grid">
@@ -1282,25 +1130,6 @@
                 alert("[ SYSTEM UPDATE ]\nออกจากระบบเรียบร้อยแล้วค่ะ สลับกลับสู่โหมดมินิมอลปกติ");
             }
         }
-        // 📁 ระบบควบคุมการเปิด-ปิดหน้าต่างคลังผลงานของคุณชินอิจิ
-function openWorksModal() {
-    const modal = document.getElementById('works-modal');
-    if (modal) modal.style.display = 'flex';
-}
-
-function closeWorksModal() {
-    const modal = document.getElementById('works-modal');
-    if (modal) modal.style.display = 'none';
-}
-
-// ลอจิกเสริม: หากคลิกพื้นที่ว่างสีดำด้านนอกหน้าต่าง ให้ปิดหน้าต่างอัตโนมัติ
-window.addEventListener('click', (event) => {
-    const modal = document.getElementById('works-modal');
-    if (event.target === modal) {
-        modal.style.display = 'none';
-    }
-});
-        
 // 📊 ระบบดึงยอดผู้เข้าชมจริงจากฐานข้อมูลกลางทั่วโลก (Real Global Counter)
 async function updateVisitorCounter() {
     // ชื่อคีย์เฉพาะสำหรับเว็บไซต์ของคุณชินอิจิ (ห้ามซ้ำกับคนอื่น)
@@ -1396,47 +1225,6 @@ window.addEventListener('DOMContentLoaded', () => {
     // สั่งรันระบบนับจำนวนจริงทั่วโลก
     updateVisitorCounter(); 
 });
-        <!-- 📁 หน้าต่างคอนโซลแสดงคลังผลงาน (Tactical Works Collection Window) -->
-<div id="works-modal" class="tactical-modal-overlay">
-    <div class="tactical-modal-content">
-        <!-- หัวข้อหน้าต่าง คอนโทรล -->
-        <div class="tactical-modal-header">
-            <span class="modal-sec-title">SYS_ARCHIVE // PORTFOLIO_COLLECTION</span>
-            <button type="button" class="modal-close-btn" onclick="closeWorksModal()">[ CLOSE_X ]</button>
-        </div>
-        
-        <!-- พื้นที่แสดงเคสผลงาน -->
-        <div class="tactical-modal-body">
-            <div class="works-tactical-grid">
-                
-                <!-- ตัวอย่างผลงานชิ้นที่ 1 -->
-                <div class="work-tactical-card">
-                    <div class="work-card-preview">
-                        <span class="preview-status">NO_IMAGE.RAW</span>
-                    </div>
-                    <div class="work-card-info">
-                        <h3 class="work-card-title">PROJECT_01 // MARKETING_STRATEGY</h3>
-                        <p class="work-card-desc">คำอธิบายผลงานเชิงกลยุทธ์ การตลาด หรือโปรเจกต์พรีเมียมของคุณชินอิจิ สามารถแก้ไขข้อความตรงนี้ได้เลยค่ะ</p>
-                        <a href="https://example.com" target="_blank" class="btn-launch-project">[ LAUNCH_PROJECT // 🌐 ]</a>
-                    </div>
-                </div>
-                
-                <!-- ตัวอย่างผลงานชิ้นที่ 2 -->
-                <div class="work-tactical-card">
-                    <div class="work-card-preview">
-                        <span class="preview-status">NO_IMAGE.RAW</span>
-                    </div>
-                    <div class="work-card-info">
-                        <h3 class="work-card-title">PROJECT_02 // SYSTEM_DEVELOPMENT</h3>
-                        <p class="work-card-desc">ระบบโครงสร้างพื้นฐาน งานเขียนโค้ด หรืองานแนว Tactical Console สุดเท่ที่คุณชินอิจิภาคภูมิใจ</p>
-                        <a href="https://example.com" target="_blank" class="btn-launch-project">[ LAUNCH_PROJECT // 🌐 ]</a>
-                    </div>
-                </div>
-
-            </div>
-        </div>
-    </div>
-</div>
     </script>
 </body>
 </html>
