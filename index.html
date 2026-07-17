@@ -66,29 +66,7 @@
             transition: background-color 0.8s ease, background-image 0.8s ease;
         }
 
-/* 🚨 ปุ่มรีเซ็ตรหัสสไตล์ Tactical Alert (แสดงในโมดอลเท่านั้น) */
-.btn-tactical-reset {
-    width: 100%;
-    background: transparent;
-    color: #ff4a4a;
-    border: 1px dashed rgba(255, 74, 74, 0.4);
-    padding: 10px;
-    border-radius: 4px;
-    font-family: var(--font-mono);
-    font-size: 0.75rem;
-    cursor: pointer;
-    transition: var(--transition-tactical);
-    margin-top: -5px;
-    margin-bottom: 15px;
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
-}
 
-.btn-tactical-reset:hover {
-    background: rgba(255, 74, 74, 0.1);
-    border-color: #ff4a4a;
-    box-shadow: 0 0 15px rgba(255, 74, 74, 0.2);
-}
         /* 🕒 สไตล์สำหรับนาฬิกา Real-time มุมขวาบน */
         .tactical-clock {
             position: fixed;
@@ -753,11 +731,6 @@
     <input type="password" id="login-pass" class="form-control code-font" required maxlength="8" placeholder="********">
 </div>
 
-<!-- 🚨 เพิ่มปุ่มรีเซ็ตจำนวนผู้เข้าชมตรงนี้ค่ะ (ใช้ type="button" เพื่อไม่ให้รบกวนระบบล็อกอิน) -->
-<button type="button" class="btn-tactical-reset" onclick="resetVisitorCounter(event)">
-    [ SIGNAL_RESET // COUNTER TO ZERO ]
-</button>
-
 <!-- แผงหน้าต่างลืมรหัสผ่านเดิม -->
 <div id="forgot-panel" class="forgot-panel">
 
@@ -1189,51 +1162,69 @@ window.addEventListener('DOMContentLoaded', () => {
     }
     updateVisitorCounter();
 });
-// 🚨 ฟังก์ชันรีเซ็ตจำนวนผู้เข้าชม (ต้องกรอกรหัสผ่านให้ถูกต้องก่อนเท่านั้น)
-async function resetVisitorCounter(event) {
-    if (event) event.preventDefault(); // ป้องกันการรีโหลดหน้าจอ
-    
-    // 🔒 1. ดึงค่ารหัสผ่านที่ผู้ใช้พิมพ์อยู่ในช่อง ณ ขณะนั้น
-    const inputPassword = document.getElementById('login-pass').value;
-    
-    // 🛡️ 2. ตรวจสอบกับรหัสผ่านของ Owner (ตัวแปร currentOwnerPassword ในระบบ)
-    if (inputPassword === "") {
-        alert("⚠️ WARNING: โปรดกรอกรหัสผ่านของคุณชินอิจิในช่อง Password ก่อนกดรีเซ็ตระบบค่ะ");
-        return; // หยุดการทำงานทันที
-    }
-    
-    if (inputPassword !== currentOwnerPassword) {
-        alert("🔴 ACCESS DENIED: รหัสผ่านไม่ถูกต้อง! ไม่ได้รับอนุญาตให้ทำการรีเซ็ตข้อมูลค่ะคุณชินอิจิ");
-        return; // รหัสไม่ตรง สั่งเด้งออกและหยุดการทำงานทันที
-    }
-    
-    // 🟢 3. ถ้ารหัสผ่านถูกต้อง จะเข้าสู่กระบวนการรีเซ็ตจริง
+// 🔒 1. ฟังก์ชันตัวช่วยสำหรับแปลงรหัสผ่านปกติให้เป็น SHA-256 ป้องกันการแอบส่องผ่าน Inspect
+async function hashSHA256(string) {
+    const utf8 = new TextEncoder().encode(string);
+    const hashBuffer = await crypto.subtle.digest('SHA-256', utf8);
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+    const hashHex = hashArray.map(bytes => bytes.toString(16).padStart(2, '0')).join('');
+    return hashHex;
+}
+
+// 📊 2. ฟังก์ชันนับจำนวนผู้เข้าชมจริงจากทั่วโลกแบบ Real-time (นับจริง 100%)
+async function updateVisitorCounter() {
     const namespace = "shinichi_portfolio";
     const key = "page_views";
     
-    const confirmReset = confirm("🚨 AUTHENTICATION SUCCESS: รหัสผ่านถูกต้อง คุณชินอิจิต้องการรีเซ็ตยอดผู้เข้าชมทั้งหมดทั่วโลกให้กลับไปเริ่มที่ 0 ใช่หรือไม่คะ?");
-    
-    if (confirmReset) {
-        try {
-            // ส่งคำสั่งเซ็ตค่าเป็น 0 ไปยังเซิร์ฟเวอร์กลางออนไลน์
-            await fetch(`https://api.counterapi.dev/v1/${namespace}/${key}/set?value=0`);
-            
-            // ล้างค่าในระบบสำรอง LocalStorage
-            localStorage.setItem('shinichi_portfolio_visits', 0);
-            
-            // อัปเดตหน้าจอทันที
-            const counterElement = document.getElementById('visitor-counter');
-            if (counterElement) {
-                counterElement.innerText = "0";
-            }
-            
-            alert("🟢 SYSTEM NOTIFICATION: รีเซ็ตระบบนับจำนวนผู้เข้าชมเป็น 0 เรียบร้อยแล้วค่ะคุณชินอิจิ");
-        } catch (error) {
-            console.error("Counter Reset Failed //", error);
-            alert("🔴 SYSTEM ERROR: ไม่สามารถเชื่อมต่อเซิร์ฟเวอร์กลางเพื่อรีเซ็ตได้ในขณะนี้ค่ะ");
+    try {
+        // ทุกครั้งที่มีคนเปิดเว็บจากทั่วโลก ระบบจะยิงสัญญาณไปบวกเพิ่มทีละ 1 ที่เซิร์ฟเวอร์กลางทันที
+        const response = await fetch(`https://api.counterapi.dev/v1/${namespace}/${key}/up`);
+        const data = await response.json();
+        
+        if (data && data.count) {
+            // แสดงผลยอดผู้เข้าชมจริงจากฐานข้อมูลกลาง
+            document.getElementById('visitor-counter').innerText = data.count.toLocaleString('en-US');
         }
+    } catch (error) {
+        console.log("Tactical Server Offline // Using Sandbox Mode");
+        let fallbackVisits = localStorage.getItem('shinichi_portfolio_visits') || 3820;
+        fallbackVisits = parseInt(fallbackVisits) + 1;
+        localStorage.setItem('shinichi_portfolio_visits', fallbackVisits);
+        document.getElementById('visitor-counter').innerText = fallbackVisits.toLocaleString('en-US');
     }
 }
+
+// 📊 ฟังก์ชันนับจำนวนผู้เข้าชมจริงจากทั่วโลกแบบ Real-time (นับจริง 100%)
+async function updateVisitorCounter() {
+    const namespace = "shinichi_portfolio";
+    const key = "page_views";
+    
+    try {
+        // ทุกครั้งที่มีคนเปิดเว็บจากทั่วโลก ระบบจะยิงสัญญาณไปบวกเพิ่มทีละ 1 ที่เซิร์ฟเวอร์กลางทันที
+        const response = await fetch(`https://api.counterapi.dev/v1/${namespace}/${key}/up`);
+        const data = await response.json();
+        
+        if (data && data.count) {
+            // แสดงผลยอดผู้เข้าชมจริงจากฐานข้อมูลกลาง
+            document.getElementById('visitor-counter').innerText = data.count.toLocaleString('en-US');
+        }
+    } catch (error) {
+        console.log("Tactical Server Offline // Using Sandbox Mode");
+        let fallbackVisits = localStorage.getItem('shinichi_portfolio_visits') || 3820;
+        fallbackVisits = parseInt(fallbackVisits) + 1;
+        localStorage.setItem('shinichi_portfolio_visits', fallbackVisits);
+        document.getElementById('visitor-counter').innerText = fallbackVisits.toLocaleString('en-US');
+    }
+}
+
+// 🔄 สั่งให้ระบบทำงานทันทีเมื่อหน้าเว็บโหลดเสร็จสิ้น
+window.addEventListener('DOMContentLoaded', () => {
+    if (typeof checkPersistedLogin === 'function') {
+        checkPersistedLogin();
+    }
+    // สั่งรันระบบนับจำนวนจริงทั่วโลก
+    updateVisitorCounter(); 
+});
     </script>
 </body>
 </html>
