@@ -29,6 +29,25 @@
             --font-mono: 'JetBrains Mono', monospace;
             --transition-tactical: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
         }
+.bg-tactical-watermark {
+    position: absolute;
+    top: 5vh;               /* เยื้องลงมาจากขอบบนเล็กน้อย (5% ของความสูงจอ) */
+    right: 5vw;             /* เยื้องเข้ามาจากขอบขวาเล็กน้อย (5% ของความกว้างจอ) */
+    width: 100vw;            /* ขนาดใหญ่ประมาณ 30% ของความกว้างหน้าจอ */
+    max-width: 450px;       /* เซฟตี้ล็อก: จำกัดขนาดสูงสุดไม่ให้ใหญ่เกินไปเมื่อเปิดบนจอ 4K */
+    opacity: 0.12;          /* ปรับความจาง (0.12 คือจาง 12%) ช่วยให้ภาพดูเป็นลางๆ */
+    z-index: 0;             /* อยู่ด้านหลังเนื้อหาหลัก (แต่ยังอยู่เหนือสีพื้นหลังหลัก) */
+    pointer-events: none;   /* สำคัญมาก! ทำให้เมาส์คลิกทะลุภาพนี้ได้ ไม่บังปุ่มกดด้านหลัง */
+    user-select: none;      /* ป้องกันไม่ให้ผู้ใช้เผลอกดลากคลุมไฮไลท์สีฟ้าที่ตัวภาพ */
+    filter: grayscale(100%); /* ทริคเสริม: ทำเป็นภาพขาวดำเพื่อให้เข้ากับธีม Tactical ดาร์กๆ */
+    transition: opacity 0.5s ease, filter 0.5s ease; /* รองรับการเปลี่ยนผ่านตอนเปลี่ยนโหมด */
+}
+
+/* 👑 ทริคพิเศษจากคิม: เมื่อคุณชินอิจิเปลี่ยนเป็น Owner Mode ให้ภาพปรับโทนตามโดยอัตโนมัติ */
+body.owner-mode .bg-tactical-watermark {
+    opacity: 0.18;          /* ปรับให้ชัดขึ้นเล็กน้อยในโหมดพรีเมียม */
+    filter: grayscale(0%) sepia(80%) hue-rotate(-10deg); /* ย้อมโทนภาพให้กลายเป็นสีทองพรีเมียม */
+}
 
         /* --- ✨ 👑 PREMIUM THEME VARIABLES (When logged in as Owner) --- */
         body.owner-mode {
@@ -700,6 +719,8 @@
     </style>
 </head>
 <body>
+<!-- ภาพพื้นหลังลายน้ำที่ควบคุมผ่าน CSS (คุณชินอิจิเปลี่ยน URL ภาพในช่อง src ได้เลยค่ะ) -->
+<img src="shin.png" class="bg-tactical-watermark" alt="Background HUD Element">
 
 <!-- 📊 หน้าต่างแสดงยอดผู้เข้าชมเว็บไซต์ -->
 <div id="visitor-counter" class="tactical-counter">00,000</div>
