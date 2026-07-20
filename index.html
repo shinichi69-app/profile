@@ -853,61 +853,39 @@ body.owner-mode .bg-tactical-watermark {
             </main>
         </div>
 
-<!-- ================= VIEW 2: WORKS TERMINAL (ยังคงเหมือนเดิม) ================= -->
+        <!-- ================= VIEW 2: WORKS TERMINAL ================= -->
         <div id="view-works" class="view-container hidden">
             <header class="works-header">
                 <h2>// Job description</h2>
-                <div class="header-actions" style="display: flex; gap: 10px;">
-                    <button class="btn-back" onclick="switchView('view-record')">[ RECORD ]</button>
-                    <button class="btn-back" onclick="switchView('view-home')">[ RETURN ]</button>
-                </div>
+                <button class="btn-back" onclick="switchView('view-home')">[ RETURN ]</button>
             </header>
 
             <section class="tactical-grid">
-                <!-- ปุ่มต่างๆ ของชินอิจิ -->
-                <button class="btn-tactical active" onclick="filterWork(1, this)"><span class="num">MG UBONRATCHATHANI // 01</span><span class="label">MG MASTER</span></button>
-                <button class="btn-tactical" onclick="filterWork(2, this)"><span class="num">MG UBONRATCHATHANI // 02</span><span class="label">MARKETING</span></button>
-                <button class="btn-tactical" onclick="filterWork(3, this)"><span class="num">MG UBONRATCHATHANI // 03</span><span class="label">IT SUPPORT</span></button>
-                <button class="btn-tactical" onclick="filterWork(4, this)"><span class="num">MG UBONRATCHATHANI // 04</span><span class="label">ADMIN / Stock</span></button>
-                <button class="btn-tactical full-width-btn" onclick="filterWork(5, this)"><span class="num">MG UBONRATCHATHANI // 05</span><span class="label">Developer </span></button>
+                <button class="btn-tactical active" onclick="filterWork(1, this)">
+                    <span class="num">MG UBONRATCHATHANI // 01</span>
+                    <span class="label">MG MASTER</span>
+                </button>
+                <button class="btn-tactical" onclick="filterWork(2, this)">
+                    <span class="num">MG UBONRATCHATHANI // 02</span>
+                    <span class="label">MARKETING</span>
+                </button>
+                <button class="btn-tactical" onclick="filterWork(3, this)">
+                    <span class="num">MG UBONRATCHATHANI // 03</span>
+                    <span class="label">IT SUPPORT</span>
+                </button>
+                <button class="btn-tactical" onclick="filterWork(4, this)">
+                    <span class="num">MG UBONRATCHATHANI // 04</span>
+                    <span class="label">ADMIN / Stock</span>
+                </button>
+                <button class="btn-tactical full-width-btn" onclick="filterWork(5, this)">
+                    <span class="num">MG UBONRATCHATHANI // 05</span>
+                    <span class="label">Developer </span>
+                </button>
             </section>
             
             <section class="display-panel">
                 <div id="panel-text" class="panel-content">
                     > โปรดเลือกคลิกสักปุ่มเถอะ...
-                </div>
-            </section>
-        </div>
-
-        <!-- ================= VIEW 3: RECORD TERMINAL (ปรับใหม่) ================= -->
-        <div id="view-record" class="view-container hidden">
-            <header class="works-header">
-                <!-- ชินอิจิสามารถ ดับเบิ้ลคลิก ที่ตัวหนังสือนี้เพื่อปลดล็อกโหมดพิมพ์ -->
-                <h2 ondblclick="unlockAdmin()" style="cursor: pointer; user-select: none;">// Classified Records</h2>
-                <button class="btn-back" onclick="switchView('view-works')">[ RETURN TO WORKS ]</button>
-            </header>
-
-            <!-- ส่วนที่ 1: หน้าจอแสดงผลสำหรับคนทั่วไป (อ่านได้อย่างเดียว) -->
-            <section class="display-panel" style="margin-top: 20px;">
-                <div id="public-thread" class="panel-content" style="display: flex; flex-direction: column; gap: 15px;">
-                    <p>> [SYSTEM]: ไม่พบผู้ใช้ที่มีสิทธิ์พิมพ์ข้อความ...</p>
-                    <p style="color: var(--highlight-color, #0f0);">> [SHINICHI LOG - 20:00]: บันทึกการทำงานวันนี้ ทุกอย่างเรียบร้อยดี ระบบพร้อมใช้งาน</p>
-                    <!-- ข้อความที่ชินอิจิพิมพ์ จะมาโชว์ตรงนี้ค่ะ -->
-                </div>
-            </section>
-
-            <!-- ส่วนที่ 2: โหมดลับสำหรับชินอิจิพิมพ์ข้อความ (ถูกซ่อนไว้ตั้งแต่แรก) -->
-            <section id="admin-panel" class="display-panel hidden" style="margin-top: 20px; border-color: red;">
-                <div class="panel-content" style="display: flex; flex-direction: column; gap: 15px;">
-                    <p style="color: red;">> [ADMIN MODE UNLOCKED]: ยินดีต้อนรับค่ะชินอิจิ กรุณาพิมพ์บันทึกของคุณ</p>
-                    
-                    <textarea id="record-input" rows="5" placeholder="Type your classified message here..." 
-                        style="width: 100%; background: transparent; color: inherit; border: 1px solid red; padding: 10px; font-family: inherit; resize: vertical;"></textarea>
-                    
-                    <button class="btn-tactical full-width-btn" style="border-color: red; color: red;" onclick="submitClassifiedRecord()">
-                        <span class="num">AUTHORIZATION // OVERRIDE</span>
-                        <span class="label">SUBMIT TO THREAD</span>
-                    </button>
                 </div>
             </section>
         </div>
@@ -1268,39 +1246,6 @@ window.addEventListener('DOMContentLoaded', () => {
     // สั่งรันระบบนับจำนวนจริงทั่วโลก
     updateVisitorCounter(); 
 });
-        // ฟังก์ชันสำหรับปลดล็อกโหมดแอดมิน
-function unlockAdmin() {
-    let password = prompt("Enter Authorization Code:");
-    // คิมตั้งรหัสลับไว้ว่า "shinichi" ชินอิจิเปลี่ยนได้ตามใจชอบเลยนะคะ
-    if (password === "shinichi") { 
-        document.getElementById("admin-panel").classList.remove("hidden");
-        document.getElementById("admin-panel").style.display = "block";
-    } else {
-        alert("Access Denied: ไม่ได้รับอนุญาต");
-    }
-}
-
-// ฟังก์ชันสำหรับส่งข้อความที่ชินอิจิพิมพ์ ไปโชว์ให้คนทั่วไปเห็น
-function submitClassifiedRecord() {
-    let input = document.getElementById("record-input").value;
-    if(input.trim() === "") return;
-
-    let threadDisplay = document.getElementById("public-thread");
-    
-    // สร้างแท็ก <p> ใหม่เพื่อแสดงข้อความ
-    let newRecord = document.createElement("p");
-    newRecord.style.color = "var(--highlight-color, #0f0)"; // ปรับสีให้ดูเป็นข้อความระบบ
-    
-    // ดึงเวลาปัจจุบันมาแสดงด้วยค่ะ
-    let currentTime = new Date().toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' });
-    newRecord.innerText = `> [SHINICHI LOG - ${currentTime}]: ${input}`;
-    
-    // นำไปต่อท้ายข้อความเดิม
-    threadDisplay.appendChild(newRecord);
-    
-    // เคลียร์กล่องข้อความหลังจากส่งเสร็จ
-    document.getElementById("record-input").value = "";
-}
     </script>
 </body>
 </html>
