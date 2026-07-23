@@ -63,6 +63,31 @@
             --grid-color: rgba(205, 162, 80, 0.02); 
             --glow-premium: 0 0 30px rgba(205, 162, 80, 0.15); 
         }
+/* ตกแต่งปุ่มเครื่องมือให้เด่นสะดุดตาแบบ Tactical Theme */
+.btn-tools-featured {
+    background: linear-gradient(135deg, rgba(255, 170, 0, 0.15), rgba(255, 85, 0, 0.15)) !important;
+    border: 1px solid #ffaa00 !important;
+    color: #ffaa00 !important;
+    box-shadow: 0 0 10px rgba(255, 170, 0, 0.2);
+    transition: all 0.3s ease;
+    margin-top: 10px;
+}
+
+.btn-tools-featured:hover {
+    background: rgba(255, 170, 0, 0.3) !important;
+    box-shadow: 0 0 20px rgba(255, 170, 0, 0.5);
+    transform: translateY(-2px);
+}
+
+/* สไตล์สำหรับปุ่มลิงก์แอป/เครื่องมือ */
+.btn-tool-item {
+    text-decoration: none;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
 
         /* --- 🌐 Global Reset & Base Layout --- */
         * {
@@ -702,44 +727,89 @@
             </main>
         </div>
 
-        <!-- ================= VIEW 2: WORKS TERMINAL ================= -->
-        <div id="view-works" class="view-container hidden">
-            <header class="works-header">
-                <h2>// Job description (มนุษย์เป็ด)</h2>
-                <button class="btn-back" onclick="switchView('view-home')">[ RETURN ]</button>
-            </header>
+      <!-- ================= VIEW 2: WORKS TERMINAL ================= -->
+<div id="view-works" class="view-container hidden">
+    <header class="works-header">
+        <h2>// Job description (มนุษย์เป็ด)</h2>
+        <button class="btn-back" onclick="switchView('view-home')">[ RETURN ]</button>
+    </header>
 
-            <section class="tactical-grid">
-                <button class="btn-tactical active" onclick="filterWork(1, this)">
-                    <span class="num">MG UBONRATCHATHANI // 01</span>
-                    <span class="label">MG MASTER</span>
-                </button>
-                <button class="btn-tactical" onclick="filterWork(2, this)">
-                    <span class="num">MG UBONRATCHATHANI // 02</span>
-                    <span class="label">MARKETING</span>
-                </button>
-                <button class="btn-tactical" onclick="filterWork(3, this)">
-                    <span class="num">MG UBONRATCHATHANI // 03</span>
-                    <span class="label">IT SUPPORT</span>
-                </button>
-                <button class="btn-tactical" onclick="filterWork(4, this)">
-                    <span class="num">MG UBONRATCHATHANI // 04</span>
-                    <span class="label">ADMIN / Stock</span>
-                </button>
-                <button class="btn-tactical full-width-btn" onclick="filterWork(5, this)">
-                    <span class="num">MG UBONRATCHATHANI // 05</span>
-                    <span class="label">Developer </span>
-                </button>
-            </section>
-            
-            <section class="display-panel">
-                <div id="panel-text" class="panel-content">
-                    > โปรดเลือกคลิกสักปุ่มเถอะ...
-                </div>
-            </section>
+    <section class="tactical-grid">
+        <button class="btn-tactical active" onclick="filterWork(1, this)">
+            <span class="num">MG UBONRATCHATHANI // 01</span>
+            <span class="label">MG MASTER</span>
+        </button>
+        <button class="btn-tactical" onclick="filterWork(2, this)">
+            <span class="num">MG UBONRATCHATHANI // 02</span>
+            <span class="label">MARKETING</span>
+        </button>
+        <button class="btn-tactical" onclick="filterWork(3, this)">
+            <span class="num">MG UBONRATCHATHANI // 03</span>
+            <span class="label">IT SUPPORT</span>
+        </button>
+        <button class="btn-tactical" onclick="filterWork(4, this)">
+            <span class="num">MG UBONRATCHATHANI // 04</span>
+            <span class="label">ADMIN / Stock</span>
+        </button>
+        <button class="btn-tactical full-width-btn" onclick="filterWork(5, this)">
+            <span class="num">MG UBONRATCHATHANI // 05</span>
+            <span class="label">Developer </span>
+        </button>
+
+        <!-- 🌟 ปุ่ม "เครื่องมือ" แบบโดดเด่น (คลิกแล้วเปิดหน้า VIEW 3) -->
+        <button class="btn-tactical full-width-btn btn-tools-featured" onclick="switchView('view-tools')">
+            <span class="num">SYSTEM UTILITY // 06</span>
+            <span class="label">🛠️ เครื่องมือ (TOOLS & LINKS)</span>
+        </button>
+    </section>
+    
+    <section class="display-panel">
+        <div id="panel-text" class="panel-content">
+            > โปรดเลือกคลิกสักปุ่มเถอะ...
         </div>
+    </section>
+</div>
 
-    </div>
+<!-- ================= VIEW 3: TOOLS TERMINAL (หน้าใหม่) ================= -->
+<div id="view-tools" class="view-container hidden">
+    <header class="works-header">
+        <h2>// UTILITY & EXTERNAL TOOLS (เครื่องมือสแกน/ลิงก์)</h2>
+        <!-- ปุ่มกดกลับไปหน้า VIEW 2 -->
+        <button class="btn-back" onclick="switchView('view-works')">[ RETURN ]</button>
+    </header>
+
+    <section class="tactical-grid">
+        <!-- ปุ่มลิงก์ว่างที่ 1 -->
+        <a href="https://your-link-1.com" target="_blank" class="btn-tactical btn-tool-item">
+            <span class="num">TOOL // 01</span>
+            <span class="label">[ ใส่ชื่อเครื่องมือ 1 ]</span>
+        </a>
+
+        <!-- ปุ่มลิงก์ว่างที่ 2 -->
+        <a href="https://your-link-2.com" target="_blank" class="btn-tactical btn-tool-item">
+            <span class="num">TOOL // 02</span>
+            <span class="label">[ ใส่ชื่อเครื่องมือ 2 ]</span>
+        </a>
+
+        <!-- ปุ่มลิงก์ว่างที่ 3 -->
+        <a href="https://your-link-3.com" target="_blank" class="btn-tactical btn-tool-item">
+            <span class="num">TOOL // 03</span>
+            <span class="label">[ ใส่ชื่อเครื่องมือ 3 ]</span>
+        </a>
+
+        <!-- ปุ่มลิงก์ว่างที่ 4 -->
+        <a href="https://your-link-4.com" target="_blank" class="btn-tactical btn-tool-item">
+            <span class="num">TOOL // 04</span>
+            <span class="label">[ ใส่ชื่อเครื่องมือ 4 ]</span>
+        </a>
+    </section>
+
+    <section class="display-panel">
+        <div class="panel-content">
+            > กรุณาเลือกเครื่องมือที่ต้องการใช้งานเพื่อเปิดไปยังหน้าภายนอก
+        </div>
+    </section>
+</div>
 
     <!-- --- ⚙️ Pure Logic (JavaScript) --- -->
     <script>
@@ -883,6 +953,17 @@ window.addEventListener('DOMContentLoaded', () => {
     // สั่งรันระบบนับจำนวนจริงทั่วโลก
     updateVisitorCounter(); 
 });
+function switchView(viewId) {
+    // ซ่อนทุก view-container
+    const views = document.querySelectorAll('.view-container');
+    views.forEach(v => v.classList.add('hidden'));
+
+    // แสดง view ที่ถูกเรียกใช้งาน
+    const targetView = document.getElementById(viewId);
+    if (targetView) {
+        targetView.classList.remove('hidden');
+    }
+}
     </script>
 </body>
 </html>
