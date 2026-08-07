@@ -940,25 +940,54 @@
             startClock();
             initVisitorCounter();
         };
-// 📊 ฟังก์ชันนับจำนวนผู้เข้าชมจริงจากทั่วโลกแบบ Real-time (นับจริง 100%)
+// 📊 ฟังก์ชันอัปเกรด: นับจำนวนผู้เข้าชมจริง (Unique Session ใน 24 ชั่วโมง)
 async function updateVisitorCounter() {
     const namespace = "shinichi_portfolio";
-    const key = "page_views1";
+    // เปลี่ยน Key ใหม่เพื่อเริ่มนับยอดที่เป็น Unique จริงๆ (หรือใช้ key เดิมก็ได้หากต้องการเลขต่อเนื่อง)
+    const key = "unique_visitors_v2"; 
+    
+    // ตั้งค่าเวลา 24 ชั่วโมง (ในหน่วยมิลลิวินาที)
+    const SESSION_DURATION = 24 * 60 * 60 * 1000; 
+    const now = new Date().getTime();
+    const lastVisit = localStorage.getItem('shinichi_last_visit');
     
     try {
-        // ทุกครั้งที่มีคนเปิดเว็บจากทั่วโลก ระบบจะยิงสัญญาณไปบวกเพิ่มทีละ 1 ที่เซิร์ฟเวอร์กลางทันที
-        const response = await fetch(`https://api.counterapi.dev/v1/${namespace}/${key}/up`);
-        const data = await response.json();
+        let response, data;
         
+        // เช็คว่าไม่เคยเข้าเว็บนี้เลย หรือ เข้าเว็บครั้งล่าสุดเกิน 24 ชั่วโมงแล้ว
+        if (!lastVisit || (now - parseInt(lastVisit)) > SESSION_DURATION) {
+            
+            // ยิง API แบบ /up เพื่อบวกจำนวนคนเข้าชม (+1)
+            response = await fetch(`https://api.counterapi.dev/v1/${namespace}/${key}/up`);
+            
+            // บันทึกเวลาที่เข้าชมล่าสุดลงในเครื่องของผู้ใช้
+            localStorage.setItem('shinichi_last_visit', now.toString());
+            console.log("System // New unique visitor logged.");
+            
+        } else {
+            // ถ้ารีเฟรชหน้าเว็บ หรือกลับมาเข้าใหม่ภายใน 24 ชม. ให้ดึงแค่ค่ายอดวิวปัจจุบัน (ไม่บวกเพิ่ม)
+            response = await fetch(`https://api.counterapi.dev/v1/${namespace}/${key}`);
+            console.log("System // Returning visitor. Counter not incremented.");
+        }
+        
+        data = await response.json();
+        
+        // อัปเดต UI 
         if (data && data.count) {
-            // แสดงผลยอดผู้เข้าชมจริงจากฐานข้อมูลกลาง
             document.getElementById('visitor-counter').innerText = data.count.toLocaleString('en-US');
         }
+        
     } catch (error) {
-        console.log("Tactical Server Offline // Using Sandbox Mode");
-        let fallbackVisits = localStorage.getItem('shinichi_portfolio_visits') || 3820;
-        fallbackVisits = parseInt(fallbackVisits) + 1;
-        localStorage.setItem('shinichi_portfolio_visits', fallbackVisits);
+        // Fallback System กรณี API ล่ม 
+        console.warn("Tactical Server Offline // Using Fallback Mode");
+        let fallbackVisits = parseInt(localStorage.getItem('shinichi_portfolio_visits') || 3820);
+        
+        if (!lastVisit || (now - parseInt(lastVisit)) > SESSION_DURATION) {
+            fallbackVisits += 1;
+            localStorage.setItem('shinichi_portfolio_visits', fallbackVisits);
+            localStorage.setItem('shinichi_last_visit', now.toString());
+        }
+        
         document.getElementById('visitor-counter').innerText = fallbackVisits.toLocaleString('en-US');
     }
 }
