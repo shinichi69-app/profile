@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="th">
 <head>
     <meta charset="UTF-8">
@@ -138,38 +138,6 @@
         }
 
         .tactical-clock:hover {
-            border-color: var(--border-active);
-            background-color: var(--bg-surface-hover);
-        }
-
-        /* 📊 สไตล์สำหรับหน้าต่างนับจำนวนผู้เข้าชมสไตล์ Tactical */
-        .tactical-counter {
-            position: fixed;
-            top: 70px; 
-            right: 24px;
-            background-color: var(--bg-surface);
-            border: 1px solid var(--border-subtle);
-            color: var(--text-pure);
-            font-family: var(--font-mono);
-            font-size: 0.8rem;
-            padding: 8px 16px;
-            border-radius: 4px;
-            z-index: 999;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.8);
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            backdrop-filter: blur(10px);
-            transition: var(--transition-tactical);
-        }
-
-        .tactical-counter::before {
-            content: "VISITOR_COUNT //";
-            color: var(--text-muted);
-            font-weight: 600;
-        }
-
-        .tactical-counter:hover {
             border-color: var(--border-active);
             background-color: var(--bg-surface-hover);
         }
@@ -649,6 +617,70 @@
             color: var(--text-muted);
             white-space: pre-line; 
         }
+
+        /* --- Responsive & accessibility improvements --- */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        button,
+        a,
+        input {
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        button:focus-visible,
+        a:focus-visible,
+        input:focus-visible {
+            outline: 2px solid var(--border-active);
+            outline-offset: 3px;
+        }
+
+        .tactical-clock {
+            user-select: none;
+        }
+
+        @media (max-width: 599px) {
+            .container {
+                padding: 76px 16px 40px;
+            }
+
+            .tactical-clock {
+                top: 12px;
+                right: 12px;
+                font-size: 0.7rem;
+                padding: 7px 10px;
+            }
+
+            .hero-section h1 {
+                font-size: clamp(2.1rem, 11vw, 3rem);
+            }
+
+            .card {
+                padding: 22px;
+            }
+
+            .tactical-modal {
+                width: calc(100% - 24px);
+                padding: 22px;
+            }
+
+            .assistive-touch-btn {
+                right: 20px;
+                bottom: 20px;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                scroll-behavior: auto !important;
+                transition-duration: 0.01ms !important;
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+            }
+        }
     </style>
 </head>
 <body>
@@ -658,14 +690,11 @@
     <!-- 🕒 ระบบนาฬิกา Real-time -->
     <div id="sys-clock" class="tactical-clock">00:00:00</div>
 
-    <!-- 📊 หน้าต่างแสดงยอดผู้เข้าชมเว็บไซต์ -->
-    <div id="visitor-counter" class="tactical-counter">00,000</div>
-
     <!-- 📱 🦾 ปุ่มลอยตัวสไตล์ iPhone AssistiveTouch -->
     <div id="assistive-btn" class="assistive-touch-btn" onclick="toggleModal(true)"></div>
 
     <!-- 🪟 🔐 หน้าต่างล็อกอิน (Modal Screen) -->
-    <div id="login-modal" class="modal-overlay">
+    <div id="login-modal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modal-title" aria-hidden="true">
         <div class="tactical-modal">
             <div class="modal-header">
                 <h3 id="modal-title">// OWNER AUTHENTICATION</h3>
@@ -780,237 +809,227 @@
 
     <section class="tactical-grid">
         <!-- ปุ่มลิงก์ที่ 1 -->
-        <a href="https://shinichi69-app.github.io/AUTO-QUOTATION-SYSTEM/" class="btn-tactical btn-tool-item">
+        <a href="https://shinichi69-app.github.io/AUTO-QUOTATION-SYSTEM/" class="btn-tactical btn-tool-item" target="_blank" rel="noopener noreferrer">
             <span class="num">TOOL // 01</span>
             <span class="label">&gt; ใบเสนอราคารถยนต์ออนไลน์ &lt;</span>
         </a>
 
         <!-- ปุ่มลิงก์ที่ 2 -->
-        <a href="https://shinichi69-app.github.io/Price-Schedule/" class="btn-tactical btn-tool-item">
+        <a href="https://shinichi69-app.github.io/Price-Schedule/" class="btn-tactical btn-tool-item" target="_blank" rel="noopener noreferrer">
             <span class="num">TOOL // 02</span>
             <span class="label">&gt; ตารางค่างวดออนไลน์ &lt;</span>
         </a>
 
         <!-- ปุ่มลิงก์ที่ 3 -->
-        <a href="https://shinichi69-app.github.io/Delivery-Note/" class="btn-tactical btn-tool-item">
+        <a href="https://shinichi69-app.github.io/Delivery-Note/" class="btn-tactical btn-tool-item" target="_blank" rel="noopener noreferrer">
             <span class="num">TOOL // 03</span>
             <span class="label">&gt; ใบส่งมอบงาน&amp;ใบวางบิล &lt;</span>
         </a>
 
         <!-- ปุ่มลิงก์ที่ 4 -->
-        <a href="https://shinichi69-app.github.io/po/" class="btn-tactical btn-tool-item">
+        <a href="https://shinichi69-app.github.io/po/" class="btn-tactical btn-tool-item" target="_blank" rel="noopener noreferrer">
             <span class="num">TOOL // 04</span>
             <span class="label">&gt; ใบสั่งซื้อ/ใบขออนุมัติ &lt;</span>
         </a>
 
         <!-- ปุ่มลิงก์ว่างที่ 5 -->
-        <a href="https://shinichi69-app.github.io/Financial-Plan/" class="btn-tactical btn-tool-item">
+        <a href="https://shinichi69-app.github.io/Financial-Plan/" class="btn-tactical btn-tool-item" target="_blank" rel="noopener noreferrer">
             <span class="num">TOOL // 05</span>
             <span class="label">&gt; แอปบันทึกรายรับ-รายจ่าย &lt;</span>
         </a>
 
         <!-- ปุ่มลิงก์ว่างที่ 6 -->
-        <a href="https://shinichi69-app.github.io/Clock-Dashboard/" class="btn-tactical btn-tool-item">
+        <a href="https://shinichi69-app.github.io/Clock-Dashboard/" class="btn-tactical btn-tool-item" target="_blank" rel="noopener noreferrer">
             <span class="num">TOOL // 06</span>
             <span class="label">&gt; แอปเช็คเวลาต่างประเทศ &lt;</span>
         </a>
 
         <!-- ปุ่มลิงก์ว่างที่ 7 -->
-        <a href="https://cyberpunk-2d-space-shooter-11308637103.asia-southeast1.run.app/" class="btn-tactical btn-tool-item">
+        <a href="https://cyberpunk-2d-space-shooter-11308637103.asia-southeast1.run.app/" class="btn-tactical btn-tool-item" target="_blank" rel="noopener noreferrer">
             <span class="num">TOOL // 07</span>
             <span class="label">&gt; เกมส์ยิง(PC) &lt;</span> 
         </a>
 
         <!-- ปุ่มลิงก์ว่างที่ 8 -->
-        <a href="https://mg-urban-racer.ai.studio" class="btn-tactical btn-tool-item">
+        <a href="https://mg-urban-racer.ai.studio" class="btn-tactical btn-tool-item" target="_blank" rel="noopener noreferrer">
             <span class="num">TOOL // 08</span>
             <span class="label">&gt; เกมส์แข่งรถ &lt;</span>
         </a>
     </section>
 </div> 
 
-    <!-- --- ⚙️ Pure Logic (JavaScript) --- -->
+    <!-- --- ⚙️ Core Logic (JavaScript) --- -->
     <script>
-        // 🔑 ระบบจัดการสถานะและรหัสผ่าน
-        let currentOwnerPassword = localStorage.getItem('ownerPassword') || 'pop11013';
+        (() => {
+            'use strict';
 
-        // 💾 ฟังก์ชันตรวจสอบสถานะล็อกอินค้างไว้ (Persisted State)
-        function checkPersistedLogin() {
-            const isOwnerLoggedIn = localStorage.getItem('ownerLoggedIn');
-            if (isOwnerLoggedIn === 'true') {
-                document.body.classList.add('owner-mode');
-                document.getElementById('role-tag').innerText = '[ OWNER ]';
-            } else {
-                document.body.classList.remove('owner-mode');
-                document.getElementById('role-tag').innerText = '[ SUPPORTER ]';
-            }
-        }
-
-        // 🕒 ฟังก์ชันนาฬิกา Real-time
-        function startClock() {
-            const clockEl = document.getElementById('sys-clock');
-            setInterval(() => {
-                const now = new Date();
-                clockEl.innerText = now.toLocaleTimeString('en-US', { hour12: false });
-            }, 1000);
-        }
-
-        // 📊 ฟังก์ชันจำลองตัวนับผู้เข้าชม
-        function initVisitorCounter() {
-            let baseCount = parseInt(localStorage.getItem('visitorCount')) || 15420;
-            // สุ่มเพิ่มยอดเมื่อมีการเข้าเว็บ (จำลอง)
-            baseCount += Math.floor(Math.random() * 5) + 1; 
-            localStorage.setItem('visitorCount', baseCount);
-            document.getElementById('visitor-counter').innerText = baseCount.toLocaleString();
-        }
-
-        // 🪟 ฟังก์ชันเปิด/ปิด Modal ล็อกอิน
-        function toggleModal(show) {
-            const modal = document.getElementById('login-modal');
-            if (show) {
-                modal.classList.add('open');
-            } else {
-                modal.classList.remove('open');
-                document.getElementById('login-form').reset(); // เคลียร์ฟอร์มเมื่อปิด
-            }
-        }
-
-        // 🔐 ฟังก์ชันจัดการการล็อกอิน
-        function handleLogin(e) {
-            e.preventDefault(); // ป้องกันหน้าเว็บ Refresh
-            const inputPass = document.getElementById('login-pass').value;
-
-            // ตรวจสอบความถูกต้องของรหัสผ่าน
-            if (inputPass === currentOwnerPassword) {
-                localStorage.setItem('ownerLoggedIn', 'true');
-                checkPersistedLogin();
-                toggleModal(false);
-            } else {
-                alert("ACCESS DENIED: รหัสผ่านไม่ถูกต้องค่ะคุณชินอิจิ");
-            }
-        }
-
-        // 🚨 ฟังก์ชันออกจากระบบ
-        function handleLogout() {
-            localStorage.setItem('ownerLoggedIn', 'false');
-            checkPersistedLogin();
-        }
-
-        // 🎭 ฟังก์ชันสลับหน้า (SPA Navigation)
-        function switchView(targetViewId) {
-            document.querySelectorAll('.view-container').forEach(view => {
-                view.classList.add('hidden');
-            });
-            document.getElementById(targetViewId).classList.remove('hidden');
-            
-            // เลื่อนจอขึ้นด้านบนเมื่อเปลี่ยนหน้า
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-
-        // 🎛️ ฟังก์ชันกรองข้อมูลประวัติการทำงาน (Mock Data API)
-        function filterWork(id, btnElement) {
-            // เอาคลาส active ออกจากปุ่มทั้งหมด
-            document.querySelectorAll('.btn-tactical').forEach(btn => {
-                btn.classList.remove('active');
-            });
-            // ใส่คลาส active ให้ปุ่มที่ถูกคลิก
-            btnElement.classList.add('active');
-
-            const textDisplay = document.getElementById('panel-text');
-            
-            // ข้อมูลจำลอง (สามารถปรับปรุงเป็น Fetch API ในอนาคตได้)
-            const workData = {
-                1: "> [MG MASTER]\n- พัฒนาทักษาการขาย และข้อมูลผลิตภัณฑ์ เพื่อสร้างทีมขายคุณภาพ",
-                2: "> [MARKETING]\n- วางแผนกลยุทธ์การตลาดทั้งออฟไลน์ และออนไลน์ รวมถึงผลิตสื่อเพื่อเพิ่มโอกาสทางการขาย",
-                3: "> [IT SUPPORT]\n- แก้ไขปัญหาระบบ Network ภายในองค์กร\n- ซ่อมบำรุงเบื้องต้น",
-                4: "> [ADMIN / Stock]\n- บริหารจัดการระบบคลังสินค้า\n- แก้ปัญหาและประสานงานระหว่างลูกค้ากับพนักงาน \n- ดูแลระบบงานขาย",
-                5: "> [Developer]\n- พัฒนาเว็บและแอปพลิเคชัน\n- ออกแบบ UI/UX และวางโครงสร้าง Database พื้นฐาน โดยใช้ระบบ AI"
+            // ==============================
+            // OWNER AUTHENTICATION
+            // ==============================
+            const STORAGE_KEYS = {
+                ownerPassword: 'ownerPassword',
+                ownerLoggedIn: 'ownerLoggedIn'
             };
 
-            // สร้าง Effect พิมพ์ดีด (Typing Effect)
-            textDisplay.innerText = "> LOADING DATA...";
-            setTimeout(() => {
-                textDisplay.innerText = workData[id] || "> ERROR: DATA NOT FOUND.";
-            }, 300);
-        }
+            const DEFAULT_OWNER_PASSWORD = 'pop11013';
 
-        // 🚀 Initialize ระบบทั้งหมดเมื่อหน้าเว็บโหลดเสร็จ
-        window.onload = () => {
-            checkPersistedLogin();
-            startClock();
-            initVisitorCounter();
-        };
-// 📊 ฟังก์ชันอัปเกรด: นับจำนวนผู้เข้าชมจริง (Unique Session ใน 24 ชั่วโมง)
-async function updateVisitorCounter() {
-    const namespace = "shinichi_portfolio";
-    // เปลี่ยน Key ใหม่เพื่อเริ่มนับยอดที่เป็น Unique จริงๆ (หรือใช้ key เดิมก็ได้หากต้องการเลขต่อเนื่อง)
-    const key = "unique_visitors_v1"; 
-    
-    // ตั้งค่าเวลา 24 ชั่วโมง (ในหน่วยมิลลิวินาที)
-    const SESSION_DURATION = 24 * 60 * 60 * 1000; 
-    const now = new Date().getTime();
-    const lastVisit = localStorage.getItem('shinichi_last_visit');
-    
-    try {
-        let response, data;
-        
-        // เช็คว่าไม่เคยเข้าเว็บนี้เลย หรือ เข้าเว็บครั้งล่าสุดเกิน 24 ชั่วโมงแล้ว
-        if (!lastVisit || (now - parseInt(lastVisit)) > SESSION_DURATION) {
-            
-            // ยิง API แบบ /up เพื่อบวกจำนวนคนเข้าชม (+1)
-            response = await fetch(`https://api.counterapi.dev/v1/${namespace}/${key}/up`);
-            
-            // บันทึกเวลาที่เข้าชมล่าสุดลงในเครื่องของผู้ใช้
-            localStorage.setItem('shinichi_last_visit', now.toString());
-            console.log("System // New unique visitor logged.");
-            
-        } else {
-            // ถ้ารีเฟรชหน้าเว็บ หรือกลับมาเข้าใหม่ภายใน 24 ชม. ให้ดึงแค่ค่ายอดวิวปัจจุบัน (ไม่บวกเพิ่ม)
-            response = await fetch(`https://api.counterapi.dev/v1/${namespace}/${key}`);
-            console.log("System // Returning visitor. Counter not incremented.");
-        }
-        
-        data = await response.json();
-        
-        // อัปเดต UI 
-        if (data && data.count) {
-            document.getElementById('visitor-counter').innerText = data.count.toLocaleString('en-US');
-        }
-        
-    } catch (error) {
-        // Fallback System กรณี API ล่ม 
-        console.warn("Tactical Server Offline // Using Fallback Mode");
-        let fallbackVisits = parseInt(localStorage.getItem('shinichi_portfolio_visits') || 3820);
-        
-        if (!lastVisit || (now - parseInt(lastVisit)) > SESSION_DURATION) {
-            fallbackVisits += 1;
-            localStorage.setItem('shinichi_portfolio_visits', fallbackVisits);
-            localStorage.setItem('shinichi_last_visit', now.toString());
-        }
-        
-        document.getElementById('visitor-counter').innerText = fallbackVisits.toLocaleString('en-US');
-    }
-}
+            const $ = (selector) => document.querySelector(selector);
+            const $$ = (selector) => [...document.querySelectorAll(selector)];
 
-// 🔄 สั่งให้ระบบทำงานทันทีเมื่อหน้าเว็บโหลดเสร็จสิ้น
-window.addEventListener('DOMContentLoaded', () => {
-    if (typeof checkPersistedLogin === 'function') {
-        checkPersistedLogin();
-    }
-    // สั่งรันระบบนับจำนวนจริงทั่วโลก
-    updateVisitorCounter(); 
-});
-function switchView(viewId) {
-    // ซ่อนทุก view-container
-    const views = document.querySelectorAll('.view-container');
-    views.forEach(v => v.classList.add('hidden'));
+            function getOwnerPassword() {
+                return localStorage.getItem(STORAGE_KEYS.ownerPassword) || DEFAULT_OWNER_PASSWORD;
+            }
 
-    // แสดง view ที่ถูกเรียกใช้งาน
-    const targetView = document.getElementById(viewId);
-    if (targetView) {
-        targetView.classList.remove('hidden');
-    }
-}
+            function checkPersistedLogin() {
+                const isOwnerLoggedIn = localStorage.getItem(STORAGE_KEYS.ownerLoggedIn) === 'true';
+
+                document.body.classList.toggle('owner-mode', isOwnerLoggedIn);
+
+                const roleTag = $('#role-tag');
+                if (roleTag) {
+                    roleTag.textContent = isOwnerLoggedIn ? '[ OWNER ]' : '[ SUPPORTER ]';
+                }
+            }
+
+            // ==============================
+            // REAL-TIME CLOCK
+            // ==============================
+            function updateClock() {
+                const clockEl = $('#sys-clock');
+                if (!clockEl) return;
+
+                const now = new Date();
+                clockEl.textContent = now.toLocaleTimeString('en-US', {
+                    hour12: false,
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    second: '2-digit'
+                });
+            }
+
+            function startClock() {
+                updateClock();
+                setInterval(updateClock, 1000);
+            }
+
+            // ==============================
+            // LOGIN MODAL
+            // ==============================
+            function toggleModal(show) {
+                const modal = $('#login-modal');
+                const form = $('#login-form');
+
+                if (!modal) return;
+
+                modal.classList.toggle('open', show);
+                modal.setAttribute('aria-hidden', String(!show));
+
+                if (!show && form) {
+                    form.reset();
+                }
+
+                if (show) {
+                    setTimeout(() => $('#login-pass')?.focus(), 120);
+                }
+            }
+
+            function handleLogin(event) {
+                event.preventDefault();
+
+                const inputPass = $('#login-pass')?.value || '';
+
+                if (inputPass === getOwnerPassword()) {
+                    localStorage.setItem(STORAGE_KEYS.ownerLoggedIn, 'true');
+                    checkPersistedLogin();
+                    toggleModal(false);
+                } else {
+                    alert('ACCESS DENIED: รหัสผ่านไม่ถูกต้อง');
+                    $('#login-pass')?.focus();
+                }
+            }
+
+            function handleLogout() {
+                localStorage.removeItem(STORAGE_KEYS.ownerLoggedIn);
+                checkPersistedLogin();
+            }
+
+            // ==============================
+            // SPA VIEW NAVIGATION
+            // ==============================
+            function switchView(viewId) {
+                const target = document.getElementById(viewId);
+                if (!target) return;
+
+                $$('.view-container').forEach(view => {
+                    view.classList.toggle('hidden', view !== target);
+                });
+
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            }
+
+            // ==============================
+            // WORK / JOB DESCRIPTION
+            // ==============================
+            const workData = {
+                1: '> [MG MASTER]\\n- พัฒนาทักษาการขาย และข้อมูลผลิตภัณฑ์ เพื่อสร้างทีมขายคุณภาพ',
+                2: '> [MARKETING]\\n- วางแผนกลยุทธ์การตลาดทั้งออฟไลน์ และออนไลน์ รวมถึงผลิตสื่อเพื่อเพิ่มโอกาสทางการขาย',
+                3: '> [IT SUPPORT]\\n- แก้ไขปัญหาระบบ Network ภายในองค์กร\\n- ซ่อมบำรุงเบื้องต้น',
+                4: '> [ADMIN / Stock]\\n- บริหารจัดการระบบคลังสินค้า\\n- แก้ปัญหาและประสานงานระหว่างลูกค้ากับพนักงาน\\n- ดูแลระบบงานขาย',
+                5: '> [Developer]\\n- พัฒนาเว็บและแอปพลิเคชัน\\n- ออกแบบ UI/UX และวางโครงสร้าง Database พื้นฐาน โดยใช้ระบบ AI'
+            };
+
+            function filterWork(id, btnElement) {
+                $$('.btn-tactical').forEach(btn => btn.classList.remove('active'));
+
+                if (btnElement) {
+                    btnElement.classList.add('active');
+                }
+
+                const textDisplay = $('#panel-text');
+                if (!textDisplay) return;
+
+                textDisplay.textContent = '> LOADING DATA...';
+
+                window.setTimeout(() => {
+                    textDisplay.textContent = workData[id] || '> ERROR: DATA NOT FOUND.';
+                }, 180);
+            }
+
+            // ==============================
+            // EVENT HANDLERS
+            // ==============================
+            window.toggleModal = toggleModal;
+            window.handleLogin = handleLogin;
+            window.handleLogout = handleLogout;
+            window.switchView = switchView;
+            window.filterWork = filterWork;
+
+            document.addEventListener('keydown', (event) => {
+                if (event.key === 'Escape') {
+                    toggleModal(false);
+                }
+            });
+
+            $('#login-modal')?.addEventListener('click', (event) => {
+                if (event.target.id === 'login-modal') {
+                    toggleModal(false);
+                }
+            });
+
+            // ==============================
+            // INITIALIZE
+            // ==============================
+            document.addEventListener('DOMContentLoaded', () => {
+                checkPersistedLogin();
+                startClock();
+
+                // ตั้งค่า view เริ่มต้นเพียงครั้งเดียว
+                switchView('view-home');
+            });
+        })();
     </script>
 </body>
 </html>
