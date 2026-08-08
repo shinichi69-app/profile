@@ -187,6 +187,43 @@
             transform: scale(0.92);
         }
 
+        /* 👁️ Unique Visitor Counter */
+        .visitor-counter {
+            position: fixed;
+            top: 68px;
+            right: 24px;
+            z-index: 999;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 14px;
+            background-color: var(--bg-surface);
+            border: 1px solid var(--border-subtle);
+            border-radius: 4px;
+            color: var(--text-pure);
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(10px);
+            user-select: none;
+        }
+
+        .visitor-counter-label {
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+
+        #visitor-count {
+            font-weight: 600;
+            min-width: 2ch;
+            text-align: right;
+        }
+
+        body.owner-mode .visitor-counter {
+            border-color: var(--border-active);
+            box-shadow: 0 0 15px rgba(205, 162, 80, 0.12);
+        }
+
         /* 🪟 🔐 Tactical Login Modal Layout */
         .modal-overlay {
             position: fixed;
@@ -652,6 +689,13 @@
                 padding: 7px 10px;
             }
 
+            .visitor-counter {
+                top: 54px;
+                right: 12px;
+                font-size: 0.65rem;
+                padding: 6px 9px;
+            }
+
             .hero-section h1 {
                 font-size: clamp(2.1rem, 11vw, 3rem);
             }
@@ -689,6 +733,12 @@
 
     <!-- 🕒 ระบบนาฬิกา Real-time -->
     <div id="sys-clock" class="tactical-clock">00:00:00</div>
+
+    <!-- 👁️ Unique Visitor Counter -->
+    <div id="visitor-counter" class="visitor-counter" aria-live="polite">
+        <span class="visitor-counter-label">VISITORS //</span>
+        <span id="visitor-count">—</span>
+    </div>
 
     <!-- 📱 🦾 ปุ่มลอยตัวสไตล์ iPhone AssistiveTouch -->
     <div id="assistive-btn" class="assistive-touch-btn" onclick="toggleModal(true)"></div>
@@ -954,6 +1004,61 @@
             }
 
             // ==============================
+            // UNIQUE VISITOR COUNTER
+            // ==============================
+            // หมายเหตุ:
+            // localStorage อย่างเดียว "นับผู้เข้าชมจริงทุกคน" ไม่ได้
+            // เพราะข้อมูลจะถูกแยกตาม browser/device ของแต่ละคน
+            // ส่วนนี้เป็นโหมดชั่วคราวสำหรับกัน refresh ซ้ำในเครื่องเดิม
+            const VISITOR_STORAGE_KEY = 'shinichi_visitor_id';
+
+            function getVisitorId() {
+                let visitorId = localStorage.getItem(VISITOR_STORAGE_KEY);
+
+                if (!visitorId) {
+                    visitorId = (crypto.randomUUID
+                        ? crypto.randomUUID()
+                        : 'v-' + Date.now() + '-' + Math.random().toString(36).slice(2));
+
+                    localStorage.setItem(VISITOR_STORAGE_KEY, visitorId);
+                }
+
+                return visitorId;
+            }
+
+            function initializeVisitorCounter() {
+                const counterEl = $('#visitor-count');
+                if (!counterEl) return;
+
+                // สร้าง Visitor ID เพียงครั้งเดียวต่อ browser/device
+                // การ refresh หน้าเดิมจะไม่ถือเป็นผู้เข้าชมใหม่
+                const visitorId = getVisitorId();
+
+                // แสดงสถานะก่อนเชื่อม backend
+                counterEl.textContent = 'ONLINE';
+
+                /*
+                 * BACKEND HOOK
+                 * ----------------------------------------------------------------
+                 * ถ้าต้องการ "ยอดรวมคนเข้าชมจริงทุกเครื่อง" ให้เชื่อม API/Firebase
+                 * ตรงนี้ โดยส่ง visitorId ไปยังฐานข้อมูล แล้วให้ server
+                 * เพิ่มยอดเฉพาะ visitorId ที่ยังไม่เคยพบ
+                 *
+                 * ตัวอย่างแนวคิด:
+                 *
+                 * fetch('YOUR_API_URL', {
+                 *     method: 'POST',
+                 *     headers: {'Content-Type': 'application/json'},
+                 *     body: JSON.stringify({ visitorId })
+                 * })
+                 * .then(r => r.json())
+                 * .then(data => {
+                 *     counterEl.textContent = Number(data.uniqueVisitors).toLocaleString();
+                 * });
+                 */
+            }
+
+            // ==============================
             // SPA VIEW NAVIGATION
             // ==============================
             function switchView(viewId) {
@@ -975,10 +1080,10 @@
             // ==============================
             const workData = {
                 1: '> [MG MASTER]\\ พัฒนาทักษาการขาย และข้อมูลผลิตภัณฑ์ เพื่อสร้างทีมขายคุณภาพ',
-                2: '> [MARKETING]\\ วางแผนกลยุทธ์การตลาดทั้งออฟไลน์ และออนไลน์ / ผลิตสื่อเพื่อเพิ่มโอกาสทางการขาย',
-                3: '> [IT SUPPORT]\\ แก้ไขปัญหาระบบ Network ภายในองค์กร / ซ่อมบำรุงเบื้องต้น',
-                4: '> [ADMIN / Stock]\\ บริหารจัดการระบบคลังสินค้า / แก้ปัญหาและประสานงานระหว่างลูกค้ากับพนักงาน / ดูแลระบบงานขาย',
-                5: '> [Developer]\\ พัฒนาเว็บและแอปพลิเคชัน / ออกแบบ UI/UX และวางโครงสร้าง Database พื้นฐาน โดยใช้ระบบ AI'
+                2: '> [MARKETING]\\ วางแผนกลยุทธ์การตลาดทั้งออฟไลน์ และออนไลน์ รวมถึงผลิตสื่อเพื่อเพิ่มโอกาสทางการขาย',
+                3: '> [IT SUPPORT]\\ แก้ไขปัญหาระบบ Network ภายในองค์กร\\n- ซ่อมบำรุงเบื้องต้น',
+                4: '> [ADMIN / Stock]\\ บริหารจัดการระบบคลังสินค้า\\n- แก้ปัญหาและประสานงานระหว่างลูกค้ากับพนักงาน\\n- ดูแลระบบงานขาย',
+                5: '> [Developer]\\ พัฒนาเว็บและแอปพลิเคชัน\\ ออกแบบ UI/UX และวางโครงสร้าง Database พื้นฐาน โดยใช้ระบบ AI'
             };
 
             function filterWork(id, btnElement) {
@@ -1025,6 +1130,7 @@
             document.addEventListener('DOMContentLoaded', () => {
                 checkPersistedLogin();
                 startClock();
+                initializeVisitorCounter();
 
                 // ตั้งค่า view เริ่มต้นเพียงครั้งเดียว
                 switchView('view-home');
