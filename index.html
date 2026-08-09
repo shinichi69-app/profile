@@ -37,7 +37,7 @@
             width: 100vw;            
             max-width: 450px;       
             opacity: 0.12;          
-            z-index: 0;             
+            z-index: 1;             
             pointer-events: none;   
             user-select: none;      
             filter: grayscale(100%); 
@@ -102,11 +102,325 @@
             min-height: 100vh;
             line-height: 1.6;
             overflow-x: hidden;
+            position: relative;
+            isolation: isolate;
             background-image: 
                 linear-gradient(var(--grid-color) 1px, transparent 1px),
                 linear-gradient(90deg, var(--grid-color) 1px, transparent 1px);
             background-size: 40px 40px;
             transition: background-color 0.8s ease, background-image 0.8s ease;
+        }
+
+
+        /* =========================================================
+           🛰️ CYBER HUD BACKGROUND v2
+           ใช้ Theme Variables เดิมทั้งหมด
+           Visitor = monochrome / Owner = gold
+           ========================================================= */
+        .cyber-hud-bg {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
+            overflow: hidden;
+            opacity: 0.72;
+        }
+
+        .hud-corner {
+            position: absolute;
+            width: 145px;
+            height: 145px;
+            opacity: 0.34;
+        }
+
+        .hud-corner::before,
+        .hud-corner::after {
+            content: "";
+            position: absolute;
+            background: var(--text-pure);
+            opacity: 0.28;
+        }
+
+        .hud-corner::before {
+            width: 100%;
+            height: 1px;
+        }
+
+        .hud-corner::after {
+            width: 1px;
+            height: 100%;
+        }
+
+        .hud-corner-tl { left: 18px; top: 18px; }
+        .hud-corner-tr { right: 18px; top: 18px; transform: scaleX(-1); }
+        .hud-corner-bl { left: 18px; bottom: 18px; transform: scaleY(-1); }
+        .hud-corner-br { right: 18px; bottom: 18px; transform: scale(-1); }
+
+        .hud-corner {
+            border-top: 1px solid rgba(255,255,255,0.10);
+            border-left: 1px solid rgba(255,255,255,0.10);
+        }
+
+        .hud-corner::before {
+            top: 26px;
+            width: 55px;
+        }
+
+        .hud-corner::after {
+            left: 26px;
+            height: 55px;
+        }
+
+        .hud-radar {
+            position: absolute;
+            right: 4vw;
+            top: 13vh;
+            width: 190px;
+            height: 190px;
+            border: 1px solid rgba(255,255,255,0.10);
+            border-radius: 50%;
+            opacity: 0.45;
+            box-shadow: inset 0 0 30px rgba(255,255,255,0.018);
+        }
+
+        .radar-ring {
+            position: absolute;
+            border: 1px solid rgba(255,255,255,0.075);
+            border-radius: 50%;
+            inset: 12%;
+        }
+
+        .ring-2 { inset: 28%; }
+        .ring-3 { inset: 43%; }
+
+        .radar-cross::before,
+        .radar-cross::after {
+            content: "";
+            position: absolute;
+            background: rgba(255,255,255,0.07);
+        }
+
+        .radar-cross::before {
+            left: 0;
+            right: 0;
+            top: 50%;
+            height: 1px;
+        }
+
+        .radar-cross::after {
+            top: 0;
+            bottom: 0;
+            left: 50%;
+            width: 1px;
+        }
+
+        .radar-sweep {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            width: 50%;
+            height: 1px;
+            transform-origin: left center;
+            background: linear-gradient(90deg, rgba(255,255,255,0.45), transparent);
+            animation: radarSweep 5s linear infinite;
+        }
+
+        .radar-dot {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            border-radius: 50%;
+            background: var(--text-pure);
+            box-shadow: 0 0 8px rgba(255,255,255,0.5);
+            animation: radarPulse 2.2s ease-in-out infinite;
+        }
+
+        .dot-a { left: 28%; top: 35%; }
+        .dot-b { left: 69%; top: 58%; animation-delay: -0.7s; }
+        .dot-c { left: 53%; top: 76%; animation-delay: -1.4s; }
+
+        .hud-network {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0.16;
+        }
+
+        .hud-network path {
+            fill: none;
+            stroke: var(--text-pure);
+            stroke-width: 0.08;
+            stroke-dasharray: 1.2 1.8;
+            animation: networkFlow 8s linear infinite;
+        }
+
+        .hud-node {
+            position: absolute;
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            font-family: var(--font-mono);
+            font-size: 8px;
+            color: var(--text-muted);
+            opacity: 0.45;
+        }
+
+        .hud-node span {
+            width: 5px;
+            height: 5px;
+            border: 1px solid var(--text-pure);
+            border-radius: 50%;
+            box-shadow: 0 0 8px rgba(255,255,255,0.25);
+            animation: nodePulse 2s ease-in-out infinite;
+        }
+
+        .node-1 { left: 6vw; top: 25vh; }
+        .node-2 { left: 27vw; top: 36vh; }
+        .node-3 { right: 25vw; top: 39vh; }
+        .node-4 { right: 7vw; top: 20vh; }
+
+        .hud-readout {
+            position: absolute;
+            font-family: var(--font-mono);
+            font-size: 8px;
+            letter-spacing: 0.08em;
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+            opacity: 0.38;
+        }
+
+        .hud-readout span { color: var(--text-muted); }
+        .hud-readout strong {
+            color: var(--text-pure);
+            font-size: 10px;
+            letter-spacing: 0.15em;
+        }
+        .hud-readout em {
+            color: var(--text-ghost);
+            font-style: normal;
+        }
+
+        .readout-left { left: 30px; top: 38%; }
+        .readout-right { right: 30px; bottom: 28%; text-align: right; }
+
+        .hud-bottom-line {
+            position: absolute;
+            left: 30px;
+            right: 30px;
+            bottom: 18px;
+            display: flex;
+            justify-content: space-between;
+            font: 7px var(--font-mono);
+            letter-spacing: 0.16em;
+            color: var(--text-ghost);
+            opacity: 0.45;
+        }
+
+        .hud-scanline {
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: -10px;
+            height: 1px;
+            background: var(--text-pure);
+            opacity: 0.09;
+            box-shadow: 0 0 14px rgba(255,255,255,0.12);
+            animation: hudScan 9s linear infinite;
+        }
+
+        body.owner-mode .cyber-hud-bg {
+            opacity: 0.78;
+        }
+
+        body.owner-mode .hud-corner {
+            border-color: rgba(205,162,80,0.14);
+        }
+
+        body.owner-mode .hud-corner::before,
+        body.owner-mode .hud-corner::after {
+            background: var(--accent-premium);
+        }
+
+        body.owner-mode .hud-network path {
+            stroke: var(--accent-premium);
+        }
+
+        body.owner-mode .radar-rings,
+        body.owner-mode .hud-radar {
+            border-color: rgba(205,162,80,0.12);
+        }
+
+        body.owner-mode .radar-sweep {
+            background: linear-gradient(90deg, rgba(205,162,80,0.55), transparent);
+        }
+
+        body.owner-mode .radar-dot,
+        body.owner-mode .hud-node span {
+            background: var(--accent-premium);
+            border-color: var(--accent-premium);
+            box-shadow: 0 0 9px rgba(205,162,80,0.45);
+        }
+
+        body.owner-mode .hud-readout strong {
+            color: var(--accent-premium);
+        }
+
+        body.owner-mode .hud-scanline {
+            background: var(--accent-premium);
+            box-shadow: 0 0 14px rgba(205,162,80,0.12);
+        }
+
+        @keyframes radarSweep {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        @keyframes radarPulse {
+            0%, 100% { opacity: 0.25; transform: scale(0.8); }
+            50% { opacity: 1; transform: scale(1.35); }
+        }
+
+        @keyframes nodePulse {
+            0%, 100% { opacity: 0.25; }
+            50% { opacity: 1; }
+        }
+
+        @keyframes networkFlow {
+            to { stroke-dashoffset: -20; }
+        }
+
+        @keyframes hudScan {
+            0% { transform: translateY(0); opacity: 0; }
+            10% { opacity: 0.09; }
+            90% { opacity: 0.09; }
+            100% { transform: translateY(110vh); opacity: 0; }
+        }
+
+        @media (max-width: 700px) {
+            .cyber-hud-bg { opacity: 0.42; }
+            .hud-radar {
+                width: 120px;
+                height: 120px;
+                right: -20px;
+                top: 18vh;
+            }
+            .hud-node { font-size: 6px; }
+            .node-2, .node-3 { display: none; }
+            .hud-readout { font-size: 6px; }
+            .readout-right { right: 12px; }
+            .hud-bottom-line { left: 12px; right: 12px; }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .radar-sweep,
+            .radar-dot,
+            .hud-node span,
+            .hud-network path,
+            .hud-scanline {
+                animation: none !important;
+            }
         }
 
         /* 🕒 สไตล์สำหรับนาฬิกา Real-time มุมขวาบน */
@@ -662,7 +976,58 @@
     </style>
 </head>
 <body>
-    <img src="shin.png" class="bg-tactical-watermark" alt="Background HUD Element">
+
+    <!-- 🛰️ Cyber HUD Background v2 -->
+    <div class="cyber-hud-bg" aria-hidden="true">
+        <div class="hud-corner hud-corner-tl"></div>
+        <div class="hud-corner hud-corner-tr"></div>
+        <div class="hud-corner hud-corner-bl"></div>
+        <div class="hud-corner hud-corner-br"></div>
+
+        <div class="hud-radar">
+            <div class="radar-ring ring-1"></div>
+            <div class="radar-ring ring-2"></div>
+            <div class="radar-ring ring-3"></div>
+            <div class="radar-cross"></div>
+            <div class="radar-sweep"></div>
+            <i class="radar-dot dot-a"></i>
+            <i class="radar-dot dot-b"></i>
+            <i class="radar-dot dot-c"></i>
+        </div>
+
+        <div class="hud-node node-1"><span></span><b>NODE_01</b></div>
+        <div class="hud-node node-2"><span></span><b>NODE_07</b></div>
+        <div class="hud-node node-3"><span></span><b>NODE_12</b></div>
+        <div class="hud-node node-4"><span></span><b>NODE_24</b></div>
+
+        <svg class="hud-network" viewBox="0 0 100 100" preserveAspectRatio="none">
+            <path d="M5 23 L27 34 L48 22 L72 38 L96 18"></path>
+            <path d="M8 77 L28 62 L51 72 L70 55 L94 76"></path>
+            <path d="M27 34 L28 62"></path>
+            <path d="M48 22 L51 72"></path>
+            <path d="M72 38 L70 55"></path>
+        </svg>
+
+        <div class="hud-readout readout-left">
+            <span>UPLINK_STATUS</span>
+            <strong>STABLE</strong>
+            <em>LATENCY 08ms</em>
+        </div>
+
+        <div class="hud-readout readout-right">
+            <span>SECURITY_LAYER</span>
+            <strong>ACTIVE</strong>
+            <em>ENCRYPTION // AES</em>
+        </div>
+
+        <div class="hud-bottom-line">
+            <span>TACTICAL_INTERFACE // 07</span>
+            <span>SYS.ONLINE</span>
+            <span>CHANNEL_SECURE</span>
+        </div>
+
+        <div class="hud-scanline"></div>
+    </div>
     <div id="sys-clock" class="tactical-clock">00:00:00</div>
     <div id="visitor-counter" class="visitor-counter" aria-live="polite">
         <span class="visitor-counter-label">VISITORS //</span>
