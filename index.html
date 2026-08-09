@@ -915,72 +915,133 @@
     </script>
 
     <!-- Script สำหรับ Firebase (จัดการเรื่องระบบสมาชิกล้วนๆ) -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-        import { 
-            getAuth, 
-            signInWithEmailAndPassword, 
-            onAuthStateChanged, 
-            signOut 
-        } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+<script type="module">
+    // 1. นำเข้าโมดูล Firebase SDK
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { 
+        getAuth, 
+        signInWithEmailAndPassword, 
+        onAuthStateChanged, 
+        signOut 
+    } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+    
+    // 🔥 เพิ่มการนำเข้า Firestore (Database)
+    import { 
+        getFirestore, 
+        doc, 
+        getDoc, 
+        setDoc, 
+        updateDoc, 
+        increment, 
+        onSnapshot 
+    } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-        const firebaseConfig = {
-            apiKey: "AIzaSyCGG103Vc3C7xhgW-4XQRU4K0OzuotLx-I",
-            authDomain: "login-15303.firebaseapp.com",
-            projectId: "login-15303",
-            storageBucket: "login-15303.firebasestorage.app",
-            messagingSenderId: "403564723749",
-            appId: "1:403564723749:web:e57a87696ccb7e17b049cc",
-            measurementId: "G-NX2PYPDR3G"
-        };
+    // 2. กำหนดค่า Configuration
+    const firebaseConfig = {
+        apiKey: "AIzaSyCGG103Vc3C7xhgW-4XQRU4K0OzuotLx-I",
+        authDomain: "login-15303.firebaseapp.com",
+        projectId: "login-15303",
+        storageBucket: "login-15303.firebasestorage.app",
+        messagingSenderId: "403564723749",
+        appId: "1:403564723749:web:e57a87696ccb7e17b049cc",
+        measurementId: "G-NX2PYPDR3G"
+    };
 
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const roleTag = document.getElementById('role-tag');
+    // 3. เริ่มต้นใช้งาน Firebase
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app); // เรียกใช้งานฐานข้อมูล
 
-        // จัดการสถานะ Login แบบ Real-time
-        onAuthStateChanged(auth, (user) => {
-            if (user) {
-                document.body.classList.add('owner-mode');
-                if (roleTag) roleTag.textContent = '[ OWNER ]';
-            } else {
-                document.body.classList.remove('owner-mode');
-                if (roleTag) roleTag.textContent = '[ SUPPORTER ]';
+    // ==========================================
+    // 🛡️ ระบบ AUTHENTICATION (Login / Logout)
+    // ==========================================
+    const roleTag = document.getElementById('role-tag');
+
+    onAuthStateChanged(auth, (user) => {
+        if (user) {
+            document.body.classList.add('owner-mode');
+            if (roleTag) roleTag.textContent = '[ OWNER ]';
+        } else {
+            document.body.classList.remove('owner-mode');
+            if (roleTag) roleTag.textContent = '[ SUPPORTER ]';
+        }
+    });
+
+    const loginForm = document.getElementById('login-form');
+    if (loginForm) {
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('login-email').value;
+            const password = document.getElementById('login-pass').value;
+
+            try {
+                await signInWithEmailAndPassword(auth, email, password);
+                window.showToast("ACCESS GRANTED: ยินดีต้อนรับกลับค่ะ", "success");
+                window.toggleModal(false);
+                loginForm.reset();
+            } catch (error) {
+                window.showToast("ACCESS DENIED: อีเมลหรือรหัสผ่านไม่ถูกต้อง", "error");
             }
         });
+    }
 
-        // ดักจับการ Submit ฟอร์มด้วย Firebase แทน
-        const loginForm = document.getElementById('login-form');
-        if (loginForm) {
-            loginForm.addEventListener('submit', async (e) => {
-                e.preventDefault(); // กันหน้าเว็บรีเฟรช
-                const email = document.getElementById('login-email').value;
-                const password = document.getElementById('login-pass').value;
+    const logoutBtn = document.getElementById('logout-btn');
+    if (logoutBtn) {
+        logoutBtn.addEventListener('click', async () => {
+            try {
+                await signOut(auth);
+                window.showToast("LOGGED OUT: ออกจากระบบสำเร็จ", "success");
+            } catch (error) {
+                window.showToast("เกิดข้อผิดพลาดในการออกจากระบบ", "error");
+            }
+        });
+    }
 
-                try {
-                    await signInWithEmailAndPassword(auth, email, password);
-                    // ใช้แจ้งเตือน Toast แบบสวยๆ แทนการใช้ alert()
-                    window.showToast("ACCESS GRANTED: ยินดีต้อนรับกลับค่ะ", "success");
-                    window.toggleModal(false);
-                    loginForm.reset();
-                } catch (error) {
-                    window.showToast("ACCESS DENIED: อีเมลหรือรหัสผ่านไม่ถูกต้อง", "error");
-                }
-            });
+    // ==========================================
+    // 👁️ ระบบ VISITOR COUNTER (นับคนเข้าเว็บ)
+    // ==========================================
+    const visitorDocRef = doc(db, "stats", "visitors");
+    const visitorCountEl = document.getElementById('visitor-count');
+
+    // ฟังก์ชัน: ดึงยอดผู้เข้าชมแบบ Real-time มาแสดงบนหน้าเว็บ
+    onSnapshot(visitorDocRef, (docSnap) => {
+        if (docSnap.exists() && visitorCountEl) {
+            // เอาตัวเลขมาแสดงและใส่ลูกน้ำ (เช่น 1,234)
+            visitorCountEl.textContent = docSnap.data().count.toLocaleString();
+        } else if (visitorCountEl) {
+            visitorCountEl.textContent = "0";
         }
+    });
 
-        // เชื่อมปุ่ม Logout เข้ากับ Firebase
-        const logoutBtn = document.getElementById('logout-btn');
-        if (logoutBtn) {
-            logoutBtn.addEventListener('click', async () => {
-                try {
-                    await signOut(auth);
-                    window.showToast("LOGGED OUT: ออกจากระบบสำเร็จ", "success");
-                } catch (error) {
-                    window.showToast("เกิดข้อผิดพลาดในการออกจากระบบ", "error");
+    // ฟังก์ชัน: บันทึกยอดผู้เข้าชมใหม่
+    async function recordVisit() {
+        // เช็คก่อนว่าเครื่องนี้เคยเข้าเว็บหรือยังใน LocalStorage
+        const hasVisited = localStorage.getItem('hasVisited_shinichi');
+        
+        if (!hasVisited) {
+            try {
+                const docSnap = await getDoc(visitorDocRef);
+                
+                if (!docSnap.exists()) {
+                    // ถ้ายังไม่มีฐานข้อมูลนี้เลย ให้สร้างใหม่และตั้งค่าเริ่มต้นเป็น 1
+                    await setDoc(visitorDocRef, { count: 1 });
+                } else {
+                    // ถ้ามีอยู่แล้ว ให้บวกเพิ่มทีละ 1 แบบปลอดภัย
+                    await updateDoc(visitorDocRef, { count: increment(1) });
                 }
-            });
+                
+                // ประทับตราในเบราว์เซอร์ว่าเคยเข้าแล้ว จะได้ไม่นับซ้ำถ้ารีเฟรช
+                localStorage.setItem('hasVisited_shinichi', 'true');
+            } catch (error) {
+                console.error("Visitor Counter Error:", error);
+                if(visitorCountEl) visitorCountEl.textContent = "SYS_ERR";
+            }
         }
+    }
+
+    // สั่งทำงานทันทีเมื่อโหลดสคริปต์
+    recordVisit();
+
     </script>
 </body>
 </html>
