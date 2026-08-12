@@ -974,6 +974,573 @@
             to { opacity: 0; transform: translateY(-10px); }
         }
     </style>
+
+<style id="hacker-interface-upgrade">
+/* =========================================================
+   HACKER INTERFACE UPGRADE
+   - Preserves existing monochrome / owner-gold theme
+   - Keeps all existing href destinations unchanged
+   ========================================================= */
+:root{
+  --hack-green:#d8ff63;
+  --hack-green-soft:rgba(216,255,99,.12);
+  --hack-red:#ff4d5a;
+  --hack-cyan:#8ff7ff;
+}
+body{
+  background-image:
+    linear-gradient(rgba(255,255,255,.018) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,.018) 1px,transparent 1px),
+    radial-gradient(circle at 50% 0%,rgba(255,255,255,.035),transparent 45%);
+  background-size:32px 32px,32px 32px,100% 100%;
+}
+body::before{
+  content:"";
+  position:fixed; inset:0; pointer-events:none; z-index:2;
+  background:repeating-linear-gradient(
+    to bottom,transparent 0,transparent 3px,
+    rgba(255,255,255,.012) 4px,transparent 5px
+  );
+  mix-blend-mode:screen;
+}
+body::after{
+  content:"";
+  position:fixed; inset:0; pointer-events:none; z-index:3;
+  box-shadow:inset 0 0 120px rgba(0,0,0,.82);
+}
+.container{max-width:920px;padding-top:105px;}
+.hero-section{
+  padding:26px 28px 38px;
+  border:1px solid var(--border-subtle);
+  border-left:3px solid var(--accent-premium);
+  background:linear-gradient(135deg,rgba(255,255,255,.025),transparent 55%);
+  box-shadow:inset 0 0 40px rgba(255,255,255,.018);
+}
+.hero-section::before{
+  content:"SECURE_TERMINAL // ID: SHINICHI";
+  display:block;
+  margin-bottom:18px;
+  color:var(--text-ghost);
+  font:10px var(--font-mono);
+  letter-spacing:.16em;
+}
+.hero-section h1{
+  font-family:var(--font-mono);
+  font-size:clamp(2.2rem,7vw,4.4rem);
+  letter-spacing:.04em;
+  text-shadow:0 0 18px rgba(255,255,255,.12);
+}
+.hero-section h1::after{
+  content:"_";
+  animation:cursorBlink .9s steps(1) infinite;
+}
+@keyframes cursorBlink{50%{opacity:0}}
+
+.card,.display-panel,.tactical-modal{
+  border-radius:0;
+  position:relative;
+  overflow:hidden;
+}
+.card::before,.display-panel::before,.tactical-modal::before{
+  content:"";
+  position:absolute; left:0; top:0; width:42px; height:42px;
+  border-top:1px solid var(--accent-premium);
+  border-left:1px solid var(--accent-premium);
+  opacity:.65;
+}
+.card::after,.display-panel::after{
+  content:"";
+  position:absolute; right:0; bottom:0; width:42px; height:42px;
+  border-right:1px solid var(--accent-premium);
+  border-bottom:1px solid var(--accent-premium);
+  opacity:.4;
+}
+.btn-primary,.btn-back,.btn-tactical,.btn-submit-login,.btn-logout{
+  border-radius:0;
+  position:relative;
+  overflow:hidden;
+  text-transform:uppercase;
+}
+.btn-primary::before,.btn-back::before,.btn-tactical::before,.btn-submit-login::before{
+  content:"";
+  position:absolute; left:0; top:0; width:4px; height:100%;
+  background:var(--accent-premium);
+  transform:scaleY(0);
+  transform-origin:bottom;
+  transition:transform .25s ease;
+}
+.btn-primary:hover::before,.btn-back:hover::before,.btn-tactical:hover::before,
+.btn-submit-login:hover::before{transform:scaleY(1)}
+.btn-primary:hover,.btn-back:hover,.btn-tactical:hover{
+  transform:translateX(3px);
+  box-shadow:inset 5px 0 0 var(--accent-premium),0 0 22px rgba(255,255,255,.06);
+}
+.tactical-grid{gap:10px;}
+.btn-tactical{
+  min-height:92px;
+  background:
+    linear-gradient(135deg,rgba(255,255,255,.035),transparent 65%),
+    var(--bg-surface);
+  clip-path:polygon(0 0,calc(100% - 12px) 0,100% 12px,100% 100%,0 100%);
+}
+.btn-tactical::after{
+  content:"↗";
+  position:absolute; right:10px; bottom:7px;
+  color:var(--text-ghost); font:12px var(--font-mono);
+}
+.btn-tactical:hover,.btn-tactical.active{
+  background:
+    linear-gradient(90deg,var(--hack-green-soft),transparent 75%),
+    var(--bg-surface-hover);
+}
+.btn-tactical:hover .label,.btn-tactical.active .label{
+  text-shadow:0 0 10px currentColor;
+}
+.btn-tactical span.num{
+  letter-spacing:.14em;
+  font-size:.65rem;
+}
+.btn-tactical span.label{
+  font-size:1rem;
+}
+.display-panel{
+  min-height:205px;
+  padding:32px 24px 24px;
+  background:
+    linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),
+    rgba(3,3,3,.92);
+  background-size:100% 24px;
+}
+.display-panel::before{
+  content:"ROOT@SHINICHI:~$  CONSOLE_OUTPUT";
+  width:auto;height:auto;
+  border:0;left:14px;top:10px;
+  font:9px var(--font-mono);
+  color:var(--text-ghost);
+  opacity:.9;
+}
+.panel-content{
+  color:#cfcfcf;
+  text-shadow:0 0 8px rgba(255,255,255,.08);
+}
+.terminal-status{
+  display:flex; gap:8px; flex-wrap:wrap; margin-top:14px;
+  font:9px var(--font-mono); color:var(--text-ghost);
+}
+.terminal-status span{
+  border:1px solid var(--border-subtle);
+  padding:4px 7px;
+}
+.works-header{
+  padding:12px 0 20px;
+  position:relative;
+}
+.works-header h2{
+  letter-spacing:.08em;
+  text-transform:uppercase;
+}
+.btn-back{
+  min-width:110px;
+}
+.modal-overlay{
+  background:rgba(0,0,0,.92);
+}
+.modal-overlay::before{
+  content:"ACCESS GATE // ENCRYPTED SESSION";
+  position:absolute; top:22px; left:50%; transform:translateX(-50%);
+  color:var(--text-ghost); font:9px var(--font-mono);
+  letter-spacing:.18em; white-space:nowrap;
+}
+.tactical-modal{
+  max-width:470px;
+  border-color:var(--accent-premium);
+  box-shadow:0 0 0 1px rgba(255,255,255,.03),0 0 70px rgba(0,0,0,.95);
+}
+.tactical-modal::after{
+  content:"";
+  position:absolute; inset:8px;
+  border:1px dashed rgba(255,255,255,.045);
+  pointer-events:none;
+}
+.form-control{
+  border-radius:0;
+  background:#080808;
+}
+.form-control:focus{
+  border-color:var(--accent-premium);
+  box-shadow:0 0 0 1px var(--accent-premium),0 0 20px rgba(255,255,255,.06);
+}
+.btn-submit-login{
+  border-radius:0;
+  letter-spacing:.12em;
+}
+.assistive-touch-btn{
+  border-radius:0;
+  width:54px;height:54px;
+  clip-path:polygon(15% 0,100% 0,100% 85%,85% 100%,0 100%,0 15%);
+}
+.assistive-touch-btn::before{
+  border-radius:0;
+  width:22px;height:22px;
+  background:transparent;
+  border:2px solid var(--text-pure);
+  box-shadow:0 0 12px currentColor;
+}
+.visitor-counter,.tactical-clock{
+  border-radius:0;
+  letter-spacing:.08em;
+}
+.visitor-counter::before{
+  content:"●";
+  color:var(--hack-green);
+  text-shadow:0 0 8px var(--hack-green);
+  animation:statusPulse 1.4s ease-in-out infinite;
+}
+@keyframes statusPulse{50%{opacity:.35}}
+.toast{
+  border-radius:0;
+  min-width:280px;
+  text-transform:uppercase;
+  letter-spacing:.05em;
+}
+.bg-tactical-watermark{z-index:1}
+#login-form .form-group:nth-child(1)::before{
+  content:"01 // IDENTITY";
+  display:block;
+  font:8px var(--font-mono);
+  color:var(--text-ghost);
+  margin-bottom:4px;
+}
+#login-form .form-group:nth-child(2)::before{
+  content:"02 // HANDLE";
+  display:block;
+  font:8px var(--font-mono);
+  color:var(--text-ghost);
+  margin-bottom:4px;
+}
+#login-form .form-group:nth-child(3)::before{
+  content:"03 // AUTH TOKEN";
+  display:block;
+  font:8px var(--font-mono);
+  color:var(--text-ghost);
+  margin-bottom:4px;
+}
+body.owner-mode .hero-section{
+  box-shadow:inset 0 0 50px rgba(205,162,80,.035),0 0 30px rgba(205,162,80,.05);
+}
+@media(max-width:700px){
+  .container{padding:88px 14px 50px;}
+  .hero-section{padding:20px 18px 28px;}
+  .hero-section h1{font-size:2.4rem;}
+  .tactical-clock{top:12px;right:12px;font-size:.68rem;padding:6px 9px;}
+  .visitor-counter{top:52px;right:12px;font-size:.62rem;padding:6px 9px;}
+  .assistive-touch-btn{right:20px;bottom:20px;}
+}
+</style>
+
+
+<style id="stealth-terminal-edition">
+/* =========================================================
+   STEALTH TERMINAL EDITION
+   Visual direction: covert command center / classified system
+   Existing links, Firebase and page content remain intact.
+   ========================================================= */
+:root{
+  --st-bg:#060908;
+  --st-panel:rgba(8,14,11,.82);
+  --st-line:rgba(146,255,181,.18);
+  --st-green:#8cffb0;
+  --st-dim:#4f7a5c;
+  --st-red:#ff6670;
+}
+body{
+  background:
+    radial-gradient(ellipse at 50% -15%,rgba(140,255,176,.07),transparent 48%),
+    linear-gradient(180deg,#030504 0%,#07100a 55%,#030504 100%);
+  color:#e8fff0;
+}
+body::before{
+  background:
+    repeating-linear-gradient(0deg,transparent 0 4px,rgba(140,255,176,.018) 5px),
+    linear-gradient(90deg,transparent 49.9%,rgba(140,255,176,.025) 50%,transparent 50.1%);
+}
+.cyber-hud-bg{opacity:.9}
+.cyber-hud-bg::after{
+  content:"";
+  position:absolute;inset:0;
+  background:
+    radial-gradient(circle at 50% 50%,transparent 0 30%,rgba(0,0,0,.18) 75%),
+    repeating-linear-gradient(90deg,transparent 0 80px,rgba(140,255,176,.012) 81px);
+}
+.hud-corner{opacity:.55}
+.hud-corner::before,.hud-corner::after{
+  background:var(--st-green)!important;
+  opacity:.35;
+}
+.hud-radar{
+  width:240px;height:240px;
+  right:7vw;top:15vh;
+  border-color:rgba(140,255,176,.18);
+}
+.radar-ring{border-color:rgba(140,255,176,.13)}
+.radar-cross::before,.radar-cross::after{background:rgba(140,255,176,.11)}
+.radar-sweep{
+  background:linear-gradient(90deg,rgba(140,255,176,.7),transparent)!important;
+}
+.radar-dot{
+  background:var(--st-green)!important;
+  box-shadow:0 0 12px var(--st-green);
+}
+.hud-network path{stroke:var(--st-green);opacity:.7}
+.hud-node span{border-color:var(--st-green);box-shadow:0 0 9px var(--st-green)}
+.hud-readout strong{color:var(--st-green)}
+.hud-bottom-line{color:var(--st-dim)}
+.hud-scanline{
+  height:2px;
+  background:var(--st-green)!important;
+  box-shadow:0 0 18px var(--st-green)!important;
+  opacity:.12;
+}
+.container{max-width:1000px;padding-top:92px}
+.hero-section{
+  padding:0 0 30px;
+  border:0;
+  margin-bottom:28px;
+}
+.hero-section::before{
+  content:"╔══════════════════════════════════════════════════════╗";
+  display:block;
+  color:var(--st-dim);
+  font:10px var(--font-mono);
+  margin-bottom:10px;
+  overflow:hidden;
+}
+.hero-section::after{
+  content:"╚══════════════════════════════════════════════════════╝";
+  display:block;
+  color:var(--st-dim);
+  font:10px var(--font-mono);
+  margin-top:16px;
+  overflow:hidden;
+}
+.avatar-wrapper{margin-bottom:14px}
+.hero-avatar{
+  width:82px;height:82px;
+  border-radius:50%;
+  border:1px solid var(--st-green);
+  padding:3px;
+  filter:grayscale(100%) contrast(1.2);
+  box-shadow:0 0 0 5px rgba(140,255,176,.025),0 0 25px rgba(140,255,176,.08);
+}
+.hero-section h1{
+  font-family:var(--font-mono);
+  font-size:clamp(2rem,6vw,3.8rem);
+  letter-spacing:.14em;
+}
+.hero-section h1::before{
+  content:"root@shinichi:~$ ";
+  display:block;
+  font-size:10px;
+  letter-spacing:.12em;
+  color:var(--st-dim);
+  margin-bottom:7px;
+}
+.hero-section h1::after{content:"_";animation:stBlink .8s steps(1) infinite}
+@keyframes stBlink{50%{opacity:0}}
+.hero-section h2{
+  color:var(--st-green);
+  font-size:.8rem;
+  letter-spacing:.16em;
+}
+.card{
+  background:var(--st-panel);
+  border:1px solid var(--st-line);
+  border-radius:2px;
+  padding:30px;
+  box-shadow:0 20px 60px rgba(0,0,0,.35),inset 0 0 45px rgba(140,255,176,.018);
+}
+.card-title{
+  font-family:var(--font-mono);
+  font-size:1rem;
+  text-transform:uppercase;
+  letter-spacing:.08em;
+}
+.card-title::before{content:">";color:var(--st-green)}
+.card p{max-width:720px}
+.btn-primary{
+  background:transparent;
+  color:var(--st-green);
+  border:1px solid var(--st-green);
+  border-radius:2px;
+  box-shadow:0 0 0 rgba(140,255,176,0);
+}
+.btn-primary:hover{
+  background:rgba(140,255,176,.08);
+  color:var(--st-green);
+  box-shadow:0 0 25px rgba(140,255,176,.08);
+}
+.terminal-status{
+  display:flex;gap:7px;flex-wrap:wrap;margin-top:18px;
+  font:8px var(--font-mono);
+}
+.terminal-status span{
+  padding:4px 8px;
+  border:1px solid var(--st-line);
+  color:var(--st-dim);
+  background:rgba(140,255,176,.015);
+}
+.terminal-status span:first-child{color:var(--st-green)}
+.works-header{
+  border-bottom:1px solid var(--st-line);
+  padding-bottom:16px;
+  margin-bottom:18px;
+}
+.works-header h2{
+  font-size:1rem;
+  color:var(--st-green);
+  letter-spacing:.12em;
+}
+.btn-back{
+  border-radius:2px;
+  color:var(--st-green);
+  border-color:var(--st-line);
+}
+.tactical-grid{
+  grid-template-columns:repeat(2,1fr);
+  gap:7px;
+}
+.btn-tactical{
+  min-height:110px;
+  padding:18px;
+  border-radius:2px;
+  background:rgba(7,13,10,.75);
+  border:1px solid var(--st-line);
+  clip-path:none;
+}
+.btn-tactical::before{
+  content:"";
+  position:absolute;inset:4px;
+  border:1px dashed rgba(140,255,176,.035);
+  pointer-events:none;
+}
+.btn-tactical::after{
+  content:"[ EXEC ]";
+  right:12px;bottom:10px;
+  color:var(--st-dim);
+  font:7px var(--font-mono);
+}
+.btn-tactical:hover,.btn-tactical.active{
+  border-color:var(--st-green);
+  background:rgba(140,255,176,.045);
+  transform:none;
+  box-shadow:inset 0 0 25px rgba(140,255,176,.025),0 0 18px rgba(140,255,176,.04);
+}
+.btn-tactical span.num{
+  color:var(--st-dim);
+  font-size:.62rem;
+}
+.btn-tactical span.label{
+  color:#e8fff0;
+  font-size:.95rem;
+}
+.display-panel{
+  margin-top:8px;
+  border-radius:2px;
+  border-color:var(--st-line);
+  background:#020403;
+  min-height:220px;
+  box-shadow:inset 0 0 60px rgba(140,255,176,.025);
+}
+.display-panel::before{
+  content:"[ TERMINAL // LIVE OUTPUT ]";
+  top:10px;right:12px;
+  color:var(--st-dim);
+}
+.panel-content{
+  color:#bce8c8;
+  font-size:.82rem;
+  padding-top:4px;
+}
+.cursor-blink{background:var(--st-green)}
+.modal-overlay{
+  background:rgba(0,4,2,.94);
+}
+.tactical-modal{
+  border:1px solid var(--st-green);
+  border-radius:2px;
+  background:#050806;
+  box-shadow:0 0 0 1px rgba(140,255,176,.04),0 0 80px rgba(0,0,0,.95);
+}
+.modal-header{border-color:var(--st-line)}
+.modal-header h3{color:var(--st-green)}
+.btn-close-modal:hover{color:var(--st-red)}
+.form-control{
+  border-radius:2px;
+  border-color:var(--st-line);
+  background:#020403;
+}
+.form-control:focus{
+  border-color:var(--st-green);
+  box-shadow:0 0 15px rgba(140,255,176,.06);
+}
+.btn-submit-login{
+  border-radius:2px;
+  background:var(--st-green);
+  color:#031007;
+}
+.btn-submit-login:hover{
+  color:var(--st-green);
+  border-color:var(--st-green);
+  background:transparent;
+}
+.tactical-clock,.visitor-counter{
+  border-radius:2px;
+  border-color:var(--st-line);
+  background:rgba(3,8,5,.82);
+  color:var(--st-green);
+}
+.visitor-counter::before{
+  content:"●";
+  color:var(--st-green);
+  text-shadow:0 0 8px var(--st-green);
+}
+.assistive-touch-btn{
+  border-radius:2px;
+  border-color:var(--st-green);
+  background:rgba(140,255,176,.045);
+  box-shadow:0 0 25px rgba(140,255,176,.06);
+}
+.assistive-touch-btn::before{
+  background:transparent;
+  border:1px solid var(--st-green);
+  border-radius:1px;
+}
+.toast{
+  border-radius:2px;
+  background:#030604;
+  border-color:var(--st-green);
+  color:var(--st-green);
+}
+body.owner-mode{
+  --st-green:#cda250;
+  --st-dim:#806d4d;
+}
+body.owner-mode .hero-avatar{
+  filter:none;
+}
+body.owner-mode .tactical-clock,
+body.owner-mode .visitor-counter{
+  color:var(--accent-premium);
+}
+@media(max-width:700px){
+  .container{padding:78px 12px 45px}
+  .tactical-grid{grid-template-columns:1fr}
+  .btn-tactical{min-height:90px}
+  .hud-radar{width:150px;height:150px;right:-35px;top:19vh}
+  .hero-section::before,.hero-section::after{font-size:7px}
+}
+</style>
+
 </head>
 <body>
 
@@ -1083,6 +1650,12 @@
                 <h3 class="card-title">ขอขอบคุณ ผู้เข้าชมเว็บไซต์ทุกท่าน</h3>
                 <p>เว็บไซต์นี้ จัดทำขึ้นเพื่อจัดเก็บผลงานของผู้สร้างเท่านั้น หากมีเครื่องมือไหนที่เป็นประโยชน์ สามารถนำไปใช้ได้เลย</p>
                 <button class="btn-primary" onclick="switchView('view-works')">VIEW WORK</button>
+                <div class="terminal-status" aria-label="system status">
+                    <span>SYS: ONLINE</span>
+                    <span>AUTH: READY</span>
+                    <span>LINK: SECURE</span>
+                    <span>MODE: TACTICAL</span>
+                </div>
             </main>
         </div>
 
@@ -1205,20 +1778,41 @@
                 if (show) setTimeout(() => $('#login-pass')?.focus(), 120);
             };
 
+            let currentViewId = 'view-home';
+
             window.switchView = function(viewId) {
                 const target = document.getElementById(viewId);
-                if (!target) return;
+                if (!target || target.id === currentViewId) return;
+
+                const previous = document.getElementById(currentViewId);
+                if (previous) {
+                    previous.style.opacity = '0';
+                    previous.style.transform = 'translateX(-18px)';
+                }
 
                 $$('.view-container').forEach(view => {
                     if (view.id === viewId) {
                         view.classList.remove('hidden');
-                        setTimeout(() => view.style.opacity = '1', 50); 
+                        view.style.opacity = '0';
+                        view.style.transform = 'translateX(18px)';
+                        requestAnimationFrame(() => {
+                            requestAnimationFrame(() => {
+                                view.style.opacity = '1';
+                                view.style.transform = 'translateX(0)';
+                            });
+                        });
                     } else {
                         view.classList.add('hidden');
-                        view.style.opacity = '0';
                     }
                 });
+
+                currentViewId = viewId;
                 window.scrollTo({ top: 0, behavior: 'smooth' });
+
+                if (typeof window.showToast === 'function') {
+                    const label = viewId.replace('view-', '').toUpperCase();
+                    window.showToast(`MODULE LOADED // ${label}`, 'success');
+                }
             };
 
             const workData = {
@@ -1238,7 +1832,7 @@
                 if (!textDisplay) return;
 
                 clearTimeout(typingTimer);
-                textDisplay.innerHTML = '<span class="cursor-blink"></span>';
+                textDisplay.innerHTML = '> ACCESSING MODULE...<br>> DECRYPTING PAYLOAD...<br><br><span class="cursor-blink"></span>';
                 
                 const textToType = workData[id] || '> ERROR: DATA NOT FOUND.';
                 let charIndex = 0;
@@ -1266,9 +1860,17 @@
                 if (counterEl) counterEl.textContent = 'ONLINE';
             }
 
+
             document.addEventListener('keydown', (e) => {
                 if (e.key === 'Escape') toggleModal(false);
+                if (e.key.toLowerCase() === 'l' && !e.ctrlKey && !e.altKey) {
+                    toggleModal(true);
+                }
+                if (e.key === '1') switchView('view-home');
+                if (e.key === '2') switchView('view-works');
+                if (e.key === '3') switchView('view-tools');
             });
+
 
             document.addEventListener('DOMContentLoaded', () => {
                 setInterval(updateClock, 1000);
@@ -1408,5 +2010,34 @@
     recordVisit();
 
     </script>
+
+<script>
+(function(){
+  const boot = document.createElement('div');
+  boot.id='stealth-boot';
+  boot.innerHTML = `
+    <div class="st-boot-inner">
+      <div class="st-boot-title">SHINICHI // SECURE TERMINAL</div>
+      <div id="st-boot-lines"></div>
+      <div class="st-boot-bar"><i></i></div>
+    </div>`;
+  const css=document.createElement('style');
+  css.textContent=`
+    #stealth-boot{position:fixed;inset:0;background:#020403;color:#8cffb0;z-index:20000;display:grid;place-items:center;font:11px JetBrains Mono,monospace;letter-spacing:.08em}
+    .st-boot-inner{width:min(560px,88vw)}
+    .st-boot-title{font-size:16px;margin-bottom:22px}
+    #st-boot-lines{color:#4f7a5c;line-height:2}
+    .st-boot-bar{height:2px;background:#142018;margin-top:18px;overflow:hidden}
+    .st-boot-bar i{display:block;width:0;height:100%;background:#8cffb0;box-shadow:0 0 14px #8cffb0;animation:stLoad 1.45s ease forwards}
+    @keyframes stLoad{to{width:100%}}
+  `;
+  document.head.appendChild(css); document.body.appendChild(boot);
+  const lines=["INITIALIZING SECURE KERNEL","CHECKING INTERFACE INTEGRITY","ESTABLISHING UPLINK","LOADING MODULES","ACCESS GATE: READY"];
+  const box=boot.querySelector('#st-boot-lines');
+  lines.forEach((t,i)=>setTimeout(()=>{box.innerHTML += '> '+t+'<br>';},i*190));
+  setTimeout(()=>{boot.style.opacity='0';boot.style.transition='opacity .35s';setTimeout(()=>boot.remove(),380)},1450);
+})();
+</script>
+
 </body>
 </html>
