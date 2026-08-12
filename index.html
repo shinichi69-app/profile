@@ -1831,9 +1831,7 @@ body.owner-mode .visitor-counter{
                 const textDisplay = $('#panel-text');
                 if (!textDisplay) return;
 
-                clearTimeout(typingTimer);
-                textDisplay.innerHTML = '> ACCESSING MODULE...<br>> DECRYPTING PAYLOAD...<br><br><span class="cursor-blink"></span>';
-                
+               
                 const textToType = workData[id] || '> ERROR: DATA NOT FOUND.';
                 let charIndex = 0;
 
