@@ -30,23 +30,25 @@
             --transition-tactical: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
+        /* --- 🛡️ Tactical Logo Background Watermark --- */
         .bg-tactical-watermark {
             position: fixed; 
-            top: 5vh;               
-            right: 2vw;             
-            width: 100vw;            
-            max-width: 450px;       
+            top: 50%;               
+            left: 50%;             
+            transform: translate(-50%, -50%);
+            width: 90vw;            
+            max-width: 550px;       
             opacity: 0.12;          
-            z-index: 1;             
+            z-index: 0;             
             pointer-events: none;   
             user-select: none;      
-            filter: grayscale(100%); 
-            transition: opacity 0.5s ease, filter 0.5s ease; 
+            filter: grayscale(100%) drop-shadow(0 0 20px rgba(255, 255, 255, 0.05)); 
+            transition: opacity 0.8s ease, filter 0.8s ease, transform 0.8s cubic-bezier(0.16, 1, 0.3, 1); 
         }
 
         body.owner-mode .bg-tactical-watermark {
             opacity: 0.18;          
-            filter: grayscale(0%) sepia(80%) hue-rotate(-10deg); 
+            filter: grayscale(0%) sepia(100%) hue-rotate(5deg) saturate(200%) drop-shadow(0 0 30px rgba(205, 162, 80, 0.25)); 
         }
 
         /* --- ✨ 👑 PREMIUM THEME VARIABLES (When logged in as Owner) --- */
@@ -86,7 +88,6 @@
             background-size: 40px 40px;
             transition: background-color 0.8s ease, background-image 0.8s ease;
         }
-
 
         /* =========================================================
            🛰️ CYBER HUD BACKGROUND v2
@@ -385,6 +386,7 @@
             .hud-readout { font-size: 6px; }
             .readout-right { right: 12px; }
             .hud-bottom-line { left: 12px; right: 12px; }
+            .bg-tactical-watermark { max-width: 85vw; }
         }
 
         @media (prefers-reduced-motion: reduce) {
@@ -967,6 +969,9 @@
     </style>
 </head>
 <body>
+
+    <!-- 🛡️ Tactical Logo Background Watermark -->
+    <img src="logo.png" alt="Shinichi Tactical Logo" class="bg-tactical-watermark">
 
     <!-- 🛰️ Cyber HUD Background v2 -->
     <div class="cyber-hud-bg" aria-hidden="true">
