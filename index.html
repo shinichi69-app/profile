@@ -64,30 +64,6 @@
             --glow-premium: 0 0 30px rgba(205, 162, 80, 0.15); 
         }
 
-        .btn-tools-featured {
-            background: linear-gradient(135deg, rgba(255, 170, 0, 0.15), rgba(255, 85, 0, 0.15)) !important;
-            border: 1px solid #ffaa00 !important;
-            color: #ffaa00 !important;
-            box-shadow: 0 0 10px rgba(255, 170, 0, 0.2);
-            transition: all 0.3s ease;
-            margin-top: 10px;
-        }
-
-        .btn-tools-featured:hover {
-            background: rgba(255, 170, 0, 0.3) !important;
-            box-shadow: 0 0 20px rgba(255, 170, 0, 0.5);
-            transform: translateY(-2px);
-        }
-
-        .btn-tool-item {
-            text-decoration: none;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-        }
-
         /* --- 🌐 Global Reset & Base Layout --- */
         * {
             box-sizing: border-box;
@@ -114,8 +90,6 @@
 
         /* =========================================================
            🛰️ CYBER HUD BACKGROUND v2
-           ใช้ Theme Variables เดิมทั้งหมด
-           Visitor = monochrome / Owner = gold
            ========================================================= */
         .cyber-hud-bg {
             position: fixed;
@@ -586,6 +560,7 @@
             font-family: var(--font-mono);
             cursor: pointer;
             font-size: 0.9rem;
+            transition: var(--transition-tactical);
         }
         .btn-close-modal:hover { color: #ff4a4a; }
 
@@ -790,30 +765,45 @@
             margin-bottom: 20px;
         }
 
-        .btn-primary {
+        .card-actions {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        /* --- 🔘 Unified Tactical Buttons Standard --- */
+        .btn-primary, .btn-back {
             display: inline-flex;
             align-items: center;
+            justify-content: center;
             gap: 8px;
-            background-color: var(--text-pure);
-            color: var(--bg-base);
-            padding: 12px 24px;
+            background-color: var(--bg-surface);
+            color: var(--text-pure);
+            padding: 10px 20px;
             border-radius: 4px;
             text-decoration: none;
             font-family: var(--font-mono);
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             font-weight: 600;
-            border: 1px solid var(--text-pure);
+            border: 1px solid var(--border-subtle);
             cursor: pointer;
             transition: var(--transition-tactical);
+            backdrop-filter: blur(10px);
         }
 
-        .btn-primary:hover {
-            background-color: transparent;
+        .btn-primary:hover, .btn-back:hover {
+            background-color: var(--bg-surface-hover);
             color: var(--text-pure);
             border-color: var(--border-active);
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.05);
         }
 
-        /* --- 🎛️ View 2: Works Terminal Section --- */
+        body.owner-mode .btn-primary:hover, 
+        body.owner-mode .btn-back:hover {
+            box-shadow: 0 0 15px rgba(205, 162, 80, 0.2);
+        }
+
+        /* --- 🎛️ View 2 & 3: Works & Tools Grid Buttons --- */
         .works-header {
             display: flex;
             justify-content: space-between;
@@ -821,6 +811,7 @@
             padding-bottom: 24px;
             border-bottom: 1px dashed var(--border-subtle);
             margin-bottom: 32px;
+            gap: 12px;
         }
 
         .works-header h2 {
@@ -829,21 +820,9 @@
             font-weight: 600;
         }
 
-        .btn-back {
-            background: transparent;
-            color: var(--text-muted);
-            border: 1px solid var(--border-subtle);
-            padding: 8px 16px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-family: var(--font-mono);
-            font-size: 0.8rem;
-            transition: var(--transition-tactical);
-        }
-
-        .btn-back:hover {
-            color: var(--text-pure);
-            border-color: var(--border-active);
+        .header-actions {
+            display: flex;
+            gap: 8px;
         }
 
         .tactical-grid {
@@ -877,6 +856,7 @@
             flex-direction: column;
             gap: 4px;
             backdrop-filter: blur(10px);
+            text-decoration: none;
         }
 
         .btn-tactical span.num {
@@ -892,7 +872,18 @@
         .btn-tactical:hover, .btn-tactical.active {
             border-color: var(--border-active);
             background-color: var(--bg-surface-hover);
-            box-shadow: 0 0 15px rgba(255, 255, 255, 0.02);
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.03);
+        }
+
+        body.owner-mode .btn-tactical:hover, 
+        body.owner-mode .btn-tactical.active {
+            box-shadow: 0 0 15px rgba(205, 162, 80, 0.15);
+        }
+
+        .btn-tool-item {
+            justify-content: center;
+            align-items: center;
+            text-align: center;
         }
 
         .display-panel {
@@ -1045,7 +1036,6 @@
                 <h3 id="modal-title">// OWNER AUTHENTICATION</h3>
                 <button class="btn-close-modal" onclick="toggleModal(false)">[ X ]</button>
             </div>
-            <!-- เอา onsubmit ของเดิมออกเพื่อให้ Firebase จัดการ -->
             <form id="login-form">
                 <div class="form-group">
                     <label>Email Address</label>
@@ -1075,14 +1065,16 @@
                 <h1>SHINICHI</h1>
                 <h2 id="role-tag">[ SUPPORTER ]</h2>
                 <div>
-                    <!-- เพิ่ม id เข้าไปเพื่อเรียกใช้จาก Firebase สคริปต์ และเอา onclick เก่าออก -->
                     <button type="button" id="logout-btn" class="btn-logout">[ DEACTIVATE OWNER MODE ]</button>
                 </div>
             </header>
             <main class="card">
                 <h3 class="card-title">ขอขอบคุณ ผู้เข้าชมเว็บไซต์ทุกท่าน</h3>
                 <p>เว็บไซต์นี้ จัดทำขึ้นเพื่อจัดเก็บผลงานของผู้สร้างเท่านั้น หากมีเครื่องมือไหนที่เป็นประโยชน์ สามารถนำไปใช้ได้เลย</p>
-                <button class="btn-primary" onclick="switchView('view-works')">VIEW WORK</button>
+                <div class="card-actions">
+                    <button class="btn-primary" onclick="switchView('view-works')">VIEW WORK</button>
+                    <button class="btn-primary" onclick="switchView('view-tools')">VIEW TOOLS</button>
+                </div>
             </main>
         </div>
 
@@ -1090,7 +1082,9 @@
         <div id="view-works" class="view-container hidden">
             <header class="works-header">
                 <h2>// Job description (มนุษย์เป็ด)</h2>
-                <button class="btn-back" onclick="switchView('view-home')">[ RETURN ]</button>
+                <div class="header-actions">
+                    <button class="btn-back" onclick="switchView('view-home')">[ HOME ]</button>
+                </div>
             </header>
 
             <section class="tactical-grid">
@@ -1114,10 +1108,7 @@
                     <span class="num">MG UBONRATCHATHANI // 05</span>
                     <span class="label">Developer </span>
                 </button>
-                <button class="btn-tactical full-width-btn btn-tools-featured" onclick="switchView('view-tools')">
-                    <span class="num">SYSTEM UTILITY // 06</span>
-                    <span class="label">🛠️ เครื่องมือแจกฟรี (FREE TOOLS)</span>
-                </button>
+
             </section>
             
             <section class="display-panel">
@@ -1131,10 +1122,12 @@
         <div id="view-tools" class="view-container hidden">
             <header class="works-header">
                 <h2>// UTILITY TOOLS (เครื่องมือ)</h2>
-                <button class="btn-back" onclick="switchView('view-works')">&lt; RETURN &gt;</button>
+                <div class="header-actions">
+                    <button class="btn-back" onclick="switchView('view-works')">[ WORKS ]</button>
+                    <button class="btn-back" onclick="switchView('view-home')">[ HOME ]</button>
+                </div>
             </header>
             <section class="tactical-grid">
-                <!-- ข้อมูล Tool ของคุณชินอิจิ คงเดิม -->
                 <a href="https://shinichi69-app.github.io/AUTO-QUOTATION-SYSTEM/" class="btn-tactical btn-tool-item" target="_blank" rel="noopener noreferrer">
                     <span class="num">TOOL // 01</span>
                     <span class="label">&gt; ใบเสนอราคารถยนต์ออนไลน์ &lt;</span>
@@ -1180,7 +1173,7 @@
 
     </div>
 
-    <!-- Script สำหรับควบคุม UI ล้วนๆ (เอา LocalStorage Login ทิ้งไป) -->
+    <!-- Script สำหรับควบคุม UI -->
     <script>
         (() => {
             'use strict';
@@ -1188,7 +1181,6 @@
             const $ = (selector) => document.querySelector(selector);
             const $$ = (selector) => [...document.querySelectorAll(selector)];
 
-            // แขวนฟังก์ชันไว้ที่ window เพื่อให้ปุ่ม HTML และโมดูล Firebase เรียกใช้ได้
             window.showToast = function(message, type = 'success') {
                 const container = $('#toast-container');
                 const toast = document.createElement('div');
@@ -1284,137 +1276,117 @@
                 initVisitor();
                 switchView('view-home');
             });
-        })(); // <--- แก้ไขปัญหาลืมปิดแท็กตรงนี้
+        })();
     </script>
 
-    <!-- Script สำหรับ Firebase (จัดการเรื่องระบบสมาชิกล้วนๆ) -->
-<script type="module">
-    // 1. นำเข้าโมดูล Firebase SDK
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-    import { 
-        getAuth, 
-        signInWithEmailAndPassword, 
-        onAuthStateChanged, 
-        signOut 
-    } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-    
-    // 🔥 เพิ่มการนำเข้า Firestore (Database)
-    import { 
-        getFirestore, 
-        doc, 
-        getDoc, 
-        setDoc, 
-        updateDoc, 
-        increment, 
-        onSnapshot 
-    } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+    <!-- Script สำหรับ Firebase (จัดการเรื่องระบบสมาชิกและ Visitor) -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+        import { 
+            getAuth, 
+            signInWithEmailAndPassword, 
+            onAuthStateChanged, 
+            signOut 
+        } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+        import { 
+            getFirestore, 
+            doc, 
+            getDoc, 
+            setDoc, 
+            updateDoc, 
+            increment, 
+            onSnapshot 
+        } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-    // 2. กำหนดค่า Configuration
-    const firebaseConfig = {
-        apiKey: "AIzaSyCGG103Vc3C7xhgW-4XQRU4K0OzuotLx-I",
-        authDomain: "login-15303.firebaseapp.com",
-        projectId: "login-15303",
-        storageBucket: "login-15303.firebasestorage.app",
-        messagingSenderId: "403564723749",
-        appId: "1:403564723749:web:e57a87696ccb7e17b049cc",
-        measurementId: "G-NX2PYPDR3G"
-    };
+        const firebaseConfig = {
+            apiKey: "AIzaSyCGG103Vc3C7xhgW-4XQRU4K0OzuotLx-I",
+            authDomain: "login-15303.firebaseapp.com",
+            projectId: "login-15303",
+            storageBucket: "login-15303.firebasestorage.app",
+            messagingSenderId: "403564723749",
+            appId: "1:403564723749:web:e57a87696ccb7e17b049cc",
+            measurementId: "G-NX2PYPDR3G"
+        };
 
-    // 3. เริ่มต้นใช้งาน Firebase
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const db = getFirestore(app); // เรียกใช้งานฐานข้อมูล
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
 
-    // ==========================================
-    // 🛡️ ระบบ AUTHENTICATION (Login / Logout)
-    // ==========================================
-    const roleTag = document.getElementById('role-tag');
+        const roleTag = document.getElementById('role-tag');
 
-    onAuthStateChanged(auth, (user) => {
-        if (user) {
-            document.body.classList.add('owner-mode');
-            if (roleTag) roleTag.textContent = '[ OWNER ]';
-        } else {
-            document.body.classList.remove('owner-mode');
-            if (roleTag) roleTag.textContent = '[ SUPPORTER ]';
-        }
-    });
-
-    const loginForm = document.getElementById('login-form');
-    if (loginForm) {
-        loginForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const email = document.getElementById('login-email').value;
-            const password = document.getElementById('login-pass').value;
-
-            try {
-                await signInWithEmailAndPassword(auth, email, password);
-                window.showToast("ACCESS GRANTED: ยินดีต้อนรับกลับค่ะ", "success");
-                window.toggleModal(false);
-                loginForm.reset();
-            } catch (error) {
-                window.showToast("ACCESS DENIED: อีเมลหรือรหัสผ่านไม่ถูกต้อง", "error");
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                document.body.classList.add('owner-mode');
+                if (roleTag) roleTag.textContent = '[ OWNER ]';
+            } else {
+                document.body.classList.remove('owner-mode');
+                if (roleTag) roleTag.textContent = '[ SUPPORTER ]';
             }
         });
-    }
 
-    const logoutBtn = document.getElementById('logout-btn');
-    if (logoutBtn) {
-        logoutBtn.addEventListener('click', async () => {
-            try {
-                await signOut(auth);
-                window.showToast("LOGGED OUT: ออกจากระบบสำเร็จ", "success");
-            } catch (error) {
-                window.showToast("เกิดข้อผิดพลาดในการออกจากระบบ", "error");
-            }
-        });
-    }
+        const loginForm = document.getElementById('login-form');
+        if (loginForm) {
+            loginForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const email = document.getElementById('login-email').value;
+                const password = document.getElementById('login-pass').value;
 
-    // ==========================================
-    // 👁️ ระบบ VISITOR COUNTER (นับคนเข้าเว็บ)
-    // ==========================================
-    const visitorDocRef = doc(db, "stats", "visitors");
-    const visitorCountEl = document.getElementById('visitor-count');
-
-    // ฟังก์ชัน: ดึงยอดผู้เข้าชมแบบ Real-time มาแสดงบนหน้าเว็บ
-    onSnapshot(visitorDocRef, (docSnap) => {
-        if (docSnap.exists() && visitorCountEl) {
-            // เอาตัวเลขมาแสดงและใส่ลูกน้ำ (เช่น 1,234)
-            visitorCountEl.textContent = docSnap.data().count.toLocaleString();
-        } else if (visitorCountEl) {
-            visitorCountEl.textContent = "0";
-        }
-    });
-
-    // ฟังก์ชัน: บันทึกยอดผู้เข้าชมใหม่
-    async function recordVisit() {
-        // เช็คก่อนว่าเครื่องนี้เคยเข้าเว็บหรือยังใน LocalStorage
-        const hasVisited = localStorage.getItem('hasVisited_shinichi');
-        
-        if (!hasVisited) {
-            try {
-                const docSnap = await getDoc(visitorDocRef);
-                
-                if (!docSnap.exists()) {
-                    // ถ้ายังไม่มีฐานข้อมูลนี้เลย ให้สร้างใหม่และตั้งค่าเริ่มต้นเป็น 1
-                    await setDoc(visitorDocRef, { count: 1 });
-                } else {
-                    // ถ้ามีอยู่แล้ว ให้บวกเพิ่มทีละ 1 แบบปลอดภัย
-                    await updateDoc(visitorDocRef, { count: increment(1) });
+                try {
+                    await signInWithEmailAndPassword(auth, email, password);
+                    window.showToast("ACCESS GRANTED: ยินดีต้อนรับกลับค่ะ", "success");
+                    window.toggleModal(false);
+                    loginForm.reset();
+                } catch (error) {
+                    window.showToast("ACCESS DENIED: อีเมลหรือรหัสผ่านไม่ถูกต้อง", "error");
                 }
-                
-                // ประทับตราในเบราว์เซอร์ว่าเคยเข้าแล้ว จะได้ไม่นับซ้ำถ้ารีเฟรช
-                localStorage.setItem('hasVisited_shinichi', 'true');
-            } catch (error) {
-                console.error("Visitor Counter Error:", error);
-                if(visitorCountEl) visitorCountEl.textContent = "SYS_ERR";
+            });
+        }
+
+        const logoutBtn = document.getElementById('logout-btn');
+        if (logoutBtn) {
+            logoutBtn.addEventListener('click', async () => {
+                try {
+                    await signOut(auth);
+                    window.showToast("LOGGED OUT: ออกจากระบบสำเร็จ", "success");
+                } catch (error) {
+                    window.showToast("เกิดข้อผิดพลาดในการออกจากระบบ", "error");
+                }
+            });
+        }
+
+        const visitorDocRef = doc(db, "stats", "visitors");
+        const visitorCountEl = document.getElementById('visitor-count');
+
+        onSnapshot(visitorDocRef, (docSnap) => {
+            if (docSnap.exists() && visitorCountEl) {
+                visitorCountEl.textContent = docSnap.data().count.toLocaleString();
+            } else if (visitorCountEl) {
+                visitorCountEl.textContent = "0";
+            }
+        });
+
+        async function recordVisit() {
+            const hasVisited = localStorage.getItem('hasVisited_shinichi');
+            
+            if (!hasVisited) {
+                try {
+                    const docSnap = await getDoc(visitorDocRef);
+                    
+                    if (!docSnap.exists()) {
+                        await setDoc(visitorDocRef, { count: 1 });
+                    } else {
+                        await updateDoc(visitorDocRef, { count: increment(1) });
+                    }
+                    
+                    localStorage.setItem('hasVisited_shinichi', 'true');
+                } catch (error) {
+                    console.error("Visitor Counter Error:", error);
+                    if(visitorCountEl) visitorCountEl.textContent = "SYS_ERR";
+                }
             }
         }
-    }
 
-    // สั่งทำงานทันทีเมื่อโหลดสคริปต์
-    recordVisit();
-
+        recordVisit();
     </script>
 </body>
 </html>
