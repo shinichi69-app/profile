@@ -1,0 +1,16 @@
+{
+  "short_name": "Shinichi",
+  "name": "Shinichi - Portfolio",
+  "icons": [
+    {
+      "src": "shin.png",
+      "sizes": "192x192 512x512",
+      "type": "image/png"
+    }
+  ],
+  "start_url": "./index.html",
+  "background_color": "#0a0a0a",
+  "theme_color": "#0a0a0a",
+  "display": "standalone",
+  "orientation": "portrait-primary"
+}

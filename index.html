@@ -4,7 +4,24 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Shinichi - Portfolio</title>
-<!-- การนำเข้า Fonts สไตล์ Technical & Modern จาก Google Fonts -->
+
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0a0a0a">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Shinichi">
+<link rel="apple-touch-icon" href="shin.png">
+
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./sw.js')
+      .then(reg => console.log('SW Registered:', reg.scope))
+      .catch(err => console.error('SW Fail:', err));
+  });
+}
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;600&family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
@@ -870,9 +887,7 @@ to { opacity: 0; transform: translateY(-10px); }
 </style>
 </head>
 <body>
-<!-- 🛡️ Tactical Logo Background Watermark -->
 <img src="shin.png" alt="Shinichi Tactical Logo" class="bg-tactical-watermark">
-<!-- 🛰️ Cyber HUD Background v2 -->
 <div class="cyber-hud-bg" aria-hidden="true">
 <div class="hud-corner hud-corner-tl"></div>
 <div class="hud-corner hud-corner-tr"></div>
@@ -921,7 +936,6 @@ to { opacity: 0; transform: translateY(-10px); }
 <span class="visitor-counter-label">VISITORS //</span>
 <span id="visitor-count">—</span>
 </div>
-<!-- UI: แจ้งเตือนแบบ Toast -->
 <div id="toast-container"></div>
 <div id="assistive-btn" class="assistive-touch-btn" onclick="toggleModal(true)"></div>
 <div id="login-modal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modal-title" aria-hidden="true">
@@ -948,7 +962,6 @@ to { opacity: 0; transform: translateY(-10px); }
 </div>
 </div>
 <div class="container">
-<!-- VIEW 1: HOME PANEL -->
 <div id="view-home" class="view-container">
 <header class="hero-section">
 <div class="avatar-wrapper">
@@ -966,12 +979,10 @@ to { opacity: 0; transform: translateY(-10px); }
 <div class="card-actions">
 <button class="btn-primary" onclick="switchView('view-works')">VIEW WORK</button>
 <button class="btn-primary" onclick="switchView('view-tools')">VIEW TOOLS</button>
-<!-- [NEW] ปุ่มเข้าหน้า Personal Tools -->
 <button class="btn-primary btn-personal-access" onclick="switchView('view-personal')">PERSONAL TOOLS</button>
 </div>
 </main>
 </div>
-<!-- VIEW 2: WORKS TERMINAL -->
 <div id="view-works" class="view-container hidden">
 <header class="works-header">
 <h2>// Job description (มนุษย์เป็ด)</h2>
@@ -1007,7 +1018,6 @@ to { opacity: 0; transform: translateY(-10px); }
 </div>
 </section>
 </div>
-<!-- VIEW 3: TOOLS TERMINAL -->
 <div id="view-tools" class="view-container hidden">
 <header class="works-header">
 <h2>// UTILITY TOOLS (เครื่องมือ)</h2>
@@ -1060,7 +1070,6 @@ to { opacity: 0; transform: translateY(-10px); }
 </section>
 </div>
 
-<!-- [NEW] VIEW 4: PERSONAL TOOLS TERMINAL -->
 <div id="view-personal" class="view-container hidden">
 <header class="works-header">
 <h2>// PERSONAL ACCESS (ส่วนตัว)</h2>
@@ -1097,7 +1106,6 @@ to { opacity: 0; transform: translateY(-10px); }
 </div>
 
 </div>
-<!-- Script สำหรับควบคุม UI -->
 <script>
 (() => {
 'use strict';
@@ -1184,7 +1192,6 @@ switchView('view-home');
 });
 })();
 </script>
-<!-- Script สำหรับ Firebase (จัดการเรื่องระบบสมาชิกและ Visitor) -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import {
