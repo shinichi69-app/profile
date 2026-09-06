@@ -3,9 +3,9 @@
   "name": "Shinichi - Portfolio",
   "icons": [
     {
-      "src": "shin.png",
+      "src": "362656.jpg",
       "sizes": "192x192 512x512",
-      "type": "image/png"
+      "type": "image/jpg"
     }
   ],
   "start_url": "./index.html",
