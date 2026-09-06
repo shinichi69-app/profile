@@ -2,7 +2,7 @@ const CACHE_NAME = 'shinichi-pwa-v1';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
-  './shin.png',
+  './362656.jpg',
   './my-profile.jpg',
   'https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;600&family=Plus+Jakarta+Sans:wght@400;600;800&display=swap'
 ];
